@@ -34,6 +34,7 @@ package="com.android.seth.runningapp">
     <activity android:name=".RunActivity" />
     <activity android:name=".RegisterActivity" />
     <activity android:name=".ProfileActivity" />
+    <activity android:name=".PastWorkoutActivity"/>
     <activity
         android:name=".LoginActivity"
         android:label="@string/title_activity_login">

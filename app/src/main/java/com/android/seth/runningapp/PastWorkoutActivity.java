@@ -1,4 +1,4 @@
-package com.runningapp;
+package com.android.seth.runningapp;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -343,3 +343,4 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
 }
 
 // TODO: past_workout_activity.xml in layouts
+// TODO: logout functionality
