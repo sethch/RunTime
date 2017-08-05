@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,13 +86,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     workout_data.add(workout);
                     float distance_miles = workout.getDistance_miles();
                     int duration_seconds = workout.getDuration();
-                    String distance = String.valueOf(distance_miles);
+                    String distance_decimals = new DecimalFormat(".##").format((float)distance_miles);
+                    String distance = String.valueOf((int)distance_miles) + distance_decimals;
                     String duration = String.valueOf(duration_seconds);
-                    String combined = "Workout " + i + " Distance: " + distance + " Duration: " + duration;
+                    String combined = i + ": Distance: " + distance + " Miles Duration: " + duration + " seconds";
                     i++;
                     test_list.add(combined);
                 }
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ProfileActivity.this, android.R.layout.simple_list_item_1, test_list);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(ProfileActivity.this, android.R.layout.simple_list_item_1, test_list);
                 workouts_list.setAdapter(arrayAdapter);
             }
 
@@ -116,3 +118,4 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 }
 
 // TODO: Populate a ListView with past workouts from user's DB, display in background
+// TODO: Handle location tracking off

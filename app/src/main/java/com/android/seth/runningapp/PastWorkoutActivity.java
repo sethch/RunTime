@@ -71,8 +71,8 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         if(googleServicesAvailable()){
             initMap();
         }
-        time_stat.setText("Total time: " + duration + " seconds");
-        distance_stat.setText("Total Distance: " + new DecimalFormat("#.##").format(distance_miles) + " miles");
+        time_stat.setText("Time: " + duration + " seconds");
+        distance_stat.setText("Distance: " + new DecimalFormat("#.##").format(distance_miles) + " miles");
     }
 
 
@@ -342,5 +342,6 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
     }
 }
 
-// TODO: past_workout_activity.xml in layouts
 // TODO: logout functionality
+// TODO: show past workouts on first ProfileActivity load
+// TODO: add delete button to either listview or PastWorkoutActivity
