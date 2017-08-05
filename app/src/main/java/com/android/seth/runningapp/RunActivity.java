@@ -2,6 +2,7 @@ package com.android.seth.runningapp;
 
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -12,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -119,7 +121,6 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(5);
         }
-
     }
 
     /**
@@ -487,8 +488,27 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             prev_location = location;
         }
     }
+
+    @Override
+    public void onBackPressed(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you would like to end this workout?");
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                storeWorkout();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+               return;
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 }
 
 // TODO: Location not on error
+// TODO: Improve AlertDialog appearance in onBackPressed()
 
 // CITATION: "Android Create Stopwatch Tutorial" http://www.android-examples.com/android-create-stopwatch-example-tutorial-in-androi
