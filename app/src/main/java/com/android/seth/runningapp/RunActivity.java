@@ -2,13 +2,17 @@ package com.android.seth.runningapp;
 
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -99,6 +103,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         handler = new Handler();
+        checkGPSandNetwork();
         if(savedInstanceState != null){
             restoreVariables(savedInstanceState);
         }
@@ -491,6 +496,14 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Called when back is pressed during RunActivity
+     * If workout is not started, just ends activity.
+     * If workout is started, AlertDialog asks user whether to:
+     * 1. Store Workout
+     * 2. Don't Store Workout
+     * 3. Cancel
+     */
     @Override
     public void onBackPressed(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -518,9 +531,47 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             finish();
         }
     }
+
+    /**
+     * Determined whether user has location tracking enabled.
+     * If not, asks user to enable location tracking or exits.
+     */
+    public void checkGPSandNetwork(){
+        LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch(Exception ex) {}
+
+        if(!gps_enabled && !network_enabled) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setMessage("Please enable location tracking");
+            dialog.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(myIntent);
+                }
+            });
+            dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    finish();
+                }
+            });
+            dialog.show();
+        }
+    }
 }
 
 // TODO: Location not on error
-// TODO: Improve AlertDialog appearance in onBackPressed()
+// TODO: Improve AlertDialog appearance in onBackPressed() and checkGPSandNetwork()
+// TODO: Potentially check whether user enabled location tracking in checkGPSandNetwork()
 
 // CITATION: "Android Create Stopwatch Tutorial" http://www.android-examples.com/android-create-stopwatch-example-tutorial-in-androi
