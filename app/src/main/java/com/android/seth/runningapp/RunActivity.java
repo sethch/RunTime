@@ -573,5 +573,3 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 // TODO: Location not on error
 // TODO: Improve AlertDialog appearance in onBackPressed() and checkGPSandNetwork()
 // TODO: Potentially check whether user enabled location tracking in checkGPSandNetwork()
-
-// CITATION: "Android Create Stopwatch Tutorial" http://www.android-examples.com/android-create-stopwatch-example-tutorial-in-androi

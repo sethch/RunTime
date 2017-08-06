@@ -55,6 +55,8 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
     private int duration;
     private float pace;
 
+    private boolean first_zoom = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,7 +189,10 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
      */
     @Override
     public void onLocationChanged(Location location) {
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
+        if(first_zoom) {
+            first_zoom = false;
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
+        }
     }
 
     /**
@@ -344,3 +349,4 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
 
 // TODO: logout functionality
 // TODO: add delete button to either listview or PastWorkoutActivity
+// TODO: Figure out why everything is so slow!

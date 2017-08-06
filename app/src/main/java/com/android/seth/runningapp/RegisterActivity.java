@@ -104,5 +104,3 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
 }
-
-// CITATION: "Firebase Android Tutorial - Part 1 - User Registration" https://www.youtube.com/watch?v=0NFwF7L-YA8
