@@ -85,11 +85,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     Workout workout = ds.getValue(Workout.class);
                     workout_data.add(workout);
                     float distance_miles = workout.getDistance_miles();
-                    int duration_seconds = workout.getDuration();
-                    String distance_decimals = new DecimalFormat(".##").format((float)distance_miles);
-                    String distance = String.valueOf((int)distance_miles) + distance_decimals;
+                    int duration_seconds = workout.getDuration();;
+                    String distance = String.valueOf((int)distance_miles);
                     String duration = String.valueOf(duration_seconds);
-                    String combined = i + ": Distance: " + distance + " Miles Duration: " + duration + " seconds";
+                    String combined = i + ": Distance: " + new DecimalFormat("#.##").format(distance_miles) + " Miles Duration: " + duration + " seconds";
                     i++;
                     test_list.add(combined);
                 }

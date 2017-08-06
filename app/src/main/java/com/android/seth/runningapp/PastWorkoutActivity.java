@@ -343,5 +343,4 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
 }
 
 // TODO: logout functionality
-// TODO: show past workouts on first ProfileActivity load
 // TODO: add delete button to either listview or PastWorkoutActivity
