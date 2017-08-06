@@ -38,7 +38,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class PastWorkoutActivity extends AppCompatActivity implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
@@ -61,6 +61,9 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_past_workout);
+        if(googleServicesAvailable()){
+            initMap();
+        }
         Intent intent = getIntent();
         time_stat = (TextView) findViewById(R.id.time_stat);
         pace_stat = (TextView) findViewById(R.id.pace_stat);
@@ -70,9 +73,6 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         duration = intent.getIntExtra("WORKOUT_DURATION", 0);
         locations = intent.getParcelableArrayListExtra("WORKOUT_LOCATIONS");
         times = intent.getIntegerArrayListExtra("WORKOUT_TIMES");
-        if(googleServicesAvailable()){
-            initMap();
-        }
         time_stat.setText("Time: " + duration + " seconds");
         distance_stat.setText("Distance: " + new DecimalFormat("#.##").format(distance_miles) + " miles");
     }
@@ -90,8 +90,6 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.mGoogleMap = googleMap;
-
-        this.mGoogleMap = googleMap;
         this.mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         //Initialize Google Play Services
@@ -99,14 +97,15 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 buildGoogleApiClient();
-                this.mGoogleMap.setMyLocationEnabled(true);
             }
         } else {
             buildGoogleApiClient();
-            this.mGoogleMap.setMyLocationEnabled(true);
         }
-        redrawPolyLines(locations);
-        placeMarkers();
+
+        if(locations.size() > 0) {
+            redrawPolyLines(locations);
+            placeMarkers();
+        }
     }
 
     /**
@@ -128,10 +127,13 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         LatLng prev_location = null;
         for(LatLng location : location_array){
             if(location != null && prev_location != null) {
-                Polyline polyline = mGoogleMap.addPolyline(new PolylineOptions()
+                mGoogleMap.addPolyline(new PolylineOptions()
                         .add(prev_location).add(location).width(10).color(Color.RED));
             }
             prev_location = location;
+        }
+        if(prev_location != null) {
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(prev_location, 16));
         }
     }
 
@@ -148,22 +150,10 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
      */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(2000); // Location update interval set to 5000 ms (5 seconds)
-        mLocationRequest.setFastestInterval(500); // TODO: fine tune & test
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        //mLocationRequest.setSmallestDisplacement(20); // TODO: fine tune & test
-        if (ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        }
     }
 
     /**
      * Called when the client is temporarily in a disconnected state.
-     * TODO: Disable UI components that require connection
-     *
      * @param cause The reason for the disconnection
      */
     @Override
@@ -180,19 +170,6 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Toast.makeText(this, "Cannot connect to play services" + connectionResult.getErrorMessage(), Toast.LENGTH_LONG).show();
-    }
-
-    /**
-     * Called when client location has changed.
-     *
-     * @param location Updated location
-     */
-    @Override
-    public void onLocationChanged(Location location) {
-        if(first_zoom) {
-            first_zoom = false;
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
-        }
     }
 
     /**
@@ -349,4 +326,5 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
 
 // TODO: logout functionality
 // TODO: add delete button to either listview or PastWorkoutActivity
+// TODO: Improve mile marker looks/labeling
 // TODO: Figure out why everything is so slow!
