@@ -79,6 +79,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private boolean begin = true;
     private boolean paused = true;
+    private boolean workout_started = false;
 
     /**
      * Checks if google play services available.
@@ -175,6 +176,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
                 resume_pause_button.setText("Pause");
                 v.setTag(0);
                 paused = false;
+                workout_started = true;
             } else {
                 TimeBuff += MillisecondTime;
                 handler.removeCallbacks(runnable);
@@ -492,19 +494,29 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onBackPressed(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you would like to end this workout?");
-        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+        builder.setMessage("Would you like to store this workout?");
+        builder.setNeutralButton("Store", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 storeWorkout();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                return;
             }
         });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.setNegativeButton("Don't Store", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        if(workout_started) {
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+        else{
+            finish();
+        }
     }
 }
 
