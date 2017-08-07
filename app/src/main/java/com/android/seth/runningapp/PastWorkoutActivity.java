@@ -10,39 +10,32 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class PastWorkoutActivity extends AppCompatActivity implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
-    private LocationRequest mLocationRequest;
 
     private TextView time_stat;
     private TextView pace_stat;
@@ -55,7 +48,6 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
     private int duration;
     private float pace;
 
-    private boolean first_zoom = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,11 +127,6 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         if(prev_location != null) {
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(prev_location, 16));
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-
     }
 
     /**
@@ -243,9 +230,6 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
                 }
                 return;
             }
-
-            // other 'case' lines to check for other permissions this app might request.
-            //You can add here other case statements according to your requirement.
         }
     }
 
@@ -317,7 +301,7 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         for(Integer index : mile_markers){
             mGoogleMap.addMarker(new MarkerOptions()
                     .position(locations.get(index))
-                    .title("Mile " + i + " At Time: " + times.get(i))
+                    .title("Mile " + i + " At " + times.get(i) + " seconds")
             );
             i++;
         }

@@ -417,10 +417,10 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(2000); // Location update interval set to 5000 ms (5 seconds)
+        mLocationRequest.setInterval(2000); // Location update interval set to 2000 ms (2 seconds)
         mLocationRequest.setFastestInterval(500); // TODO: fine tune & test
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        //mLocationRequest.setSmallestDisplacement(20); // TODO: fine tune & test
+        mLocationRequest.setSmallestDisplacement(20); // TODO: fine tune & test
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -570,6 +570,6 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 }
 
-// TODO: Location not on error
 // TODO: Improve AlertDialog appearance in onBackPressed() and checkGPSandNetwork()
 // TODO: Potentially check whether user enabled location tracking in checkGPSandNetwork()
+// TODO: Improve accuracy of location tracking (seems to miss a decent chunk sometimes)

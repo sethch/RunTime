@@ -4,15 +4,10 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -27,7 +22,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -74,7 +68,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         FirebaseUser user = firebaseAuth.getCurrentUser();
         workout_data = new ArrayList<>();
 
-
         // TODO: Fix datachange function
         databaseReference.child("users").child(user.getUid()).child("workouts").addValueEventListener(new ValueEventListener() {
             @Override
@@ -86,7 +79,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     workout_data.add(workout);
                     float distance_miles = workout.getDistance_miles();
                     int duration_seconds = workout.getDuration();;
-                    String distance = String.valueOf((int)distance_miles);
                     String duration = String.valueOf(duration_seconds);
                     String combined = i + ": Distance: " + new DecimalFormat("#.##").format(distance_miles) + " Miles Duration: " + duration + " seconds";
                     i++;
@@ -116,5 +108,4 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
 }
 
-// TODO: Populate a ListView with past workouts from user's DB, display in background
-// TODO: Handle location tracking off
+// TODO: Add progress spinner to onCreate()
