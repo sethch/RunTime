@@ -1,5 +1,6 @@
 package com.android.seth.runningapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,16 +34,19 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseListAdapter<Workout> workout_adapter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        progressDialog = new ProgressDialog(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         begin_button = (Button) findViewById(R.id.push_button);
         begin_button.setOnClickListener(this);
         workouts_list = (ListView) findViewById(R.id.profile_listView);
+
         workouts_list.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -63,6 +67,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 ProfileActivity.this.startActivity(pastWorkout);
             }
         });
+
+        progressDialog.setMessage("Loading past workouts...");
+        progressDialog.show();
+
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -86,6 +94,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(ProfileActivity.this, android.R.layout.simple_list_item_1, test_list);
                 workouts_list.setAdapter(arrayAdapter);
+                progressDialog.dismiss();
             }
 
             @Override
@@ -107,5 +116,3 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 }
-
-// TODO: Add progress spinner to onCreate()
