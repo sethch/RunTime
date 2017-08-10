@@ -337,4 +337,3 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
 // TODO: logout functionality
 // TODO: add delete button to either listview or PastWorkoutActivity
 // TODO: Improve mile marker looks/labeling
-// TODO: Figure out why everything is so slow!

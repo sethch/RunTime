@@ -417,8 +417,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(2000); // Location update interval set to 2000 ms (2 seconds)
-        mLocationRequest.setFastestInterval(500); // TODO: fine tune & test
+        mLocationRequest.setInterval(4000); // Location update interval set to 2000 ms (2 seconds)
+        mLocationRequest.setFastestInterval(2000); // TODO: fine tune & test
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setSmallestDisplacement(20); // TODO: fine tune & test
         if (ContextCompat.checkSelfPermission(this,
@@ -572,5 +572,3 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 
 // TODO: Improve AlertDialog appearance in onBackPressed() and checkGPSandNetwork()
 // TODO: Potentially check whether user enabled location tracking in checkGPSandNetwork()
-// TODO: Improve accuracy of location tracking (seems to miss a decent chunk sometimes)
-// TODO: Background color on textviews

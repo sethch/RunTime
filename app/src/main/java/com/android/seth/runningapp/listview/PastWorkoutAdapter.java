@@ -5,4 +5,7 @@ package com.android.seth.runningapp.listview;
  */
 
 public class PastWorkoutAdapter {
+
 }
+
+// TODO: ListViewAdapter for ProfileActivity
