@@ -65,7 +65,7 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         duration = intent.getIntExtra("WORKOUT_DURATION", 0);
         locations = intent.getParcelableArrayListExtra("WORKOUT_LOCATIONS");
         times = intent.getIntegerArrayListExtra("WORKOUT_TIMES");
-        time_stat.setText("Time: " + duration + " seconds");
+        time_stat.setText("Time: " + getTime(duration));
         distance_stat.setText("Distance: " + new DecimalFormat("#.##").format(distance_miles) + " miles");
     }
 
@@ -299,12 +299,38 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         }
         int i = 1;
         for(Integer index : mile_markers){
+            int total_seconds = times.get(index);
+            String time = getTime(total_seconds);
             mGoogleMap.addMarker(new MarkerOptions()
-                    .position(locations.get(index))
-                    .title("Mile " + i + " At " + times.get(index) + " seconds")
+                        .position(locations.get(index))
+                        .title("Mile " + i + " At " + time)
+            );
+            mGoogleMap.addMarker(new MarkerOptions()
+                        .position(locations.get(index))
+                        .title("Mile " + i + " At " + time)
             );
             i++;
         }
+    }
+
+    /**
+     * Converts int number of seconds to an Hours:Minutes:Seconds format
+     * @param total_seconds total number of seconds
+     * @return String in correct time format
+     */
+    public String getTime(int total_seconds){
+        String to_return;
+        int total_minutes = total_seconds / 60;
+        int hours = total_minutes / 60;
+        int minutes = total_minutes % 60;
+        int seconds = total_seconds % 60;
+        if(hours == 0){
+            to_return = minutes + ":" + seconds;
+        }
+        else{
+            to_return = hours + ":" + minutes + ":" + seconds;
+        }
+        return to_return;
     }
 }
 
