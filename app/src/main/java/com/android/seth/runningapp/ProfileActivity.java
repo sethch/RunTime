@@ -116,3 +116,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 }
+
+// TODO: Convert seconds to minutes/hours...etc
+// TODO: Consider menu with start/past workouts seperate

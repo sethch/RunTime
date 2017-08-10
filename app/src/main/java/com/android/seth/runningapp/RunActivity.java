@@ -573,3 +573,4 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 // TODO: Improve AlertDialog appearance in onBackPressed() and checkGPSandNetwork()
 // TODO: Potentially check whether user enabled location tracking in checkGPSandNetwork()
 // TODO: Improve accuracy of location tracking (seems to miss a decent chunk sometimes)
+// TODO: Background color on textviews

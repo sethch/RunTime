@@ -301,7 +301,7 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         for(Integer index : mile_markers){
             mGoogleMap.addMarker(new MarkerOptions()
                     .position(locations.get(index))
-                    .title("Mile " + i + " At " + times.get(i) + " seconds")
+                    .title("Mile " + i + " At " + times.get(index) + " seconds")
             );
             i++;
         }
