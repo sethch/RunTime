@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.android.seth.runningapp.listview.PastWorkout;
+import com.android.seth.runningapp.listview.PastWorkoutAdapter;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,13 +31,15 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private Toolbar toolbar;
     private Button begin_button;
-    private ListView workouts_list;
     private ArrayList<Workout> workout_data;
+    private ArrayList<PastWorkout> past_workout_list;
 
+    private ListView listView;
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseListAdapter<Workout> workout_adapter;
     private ProgressDialog progressDialog;
+    private PastWorkoutAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +50,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         setSupportActionBar(toolbar);
         begin_button = (Button) findViewById(R.id.push_button);
         begin_button.setOnClickListener(this);
-        workouts_list = (ListView) findViewById(R.id.profile_listView);
+        listView = (ListView) findViewById(R.id.profile_listView);
 
-        workouts_list.setOnItemClickListener(new ListView.OnItemClickListener() {
+        listView.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Workout clicked_workout = workout_data.get(position);
+                Workout clicked_workout = past_workout_list.get(position).getWorkout();
                 Intent pastWorkout = new Intent(ProfileActivity.this, PastWorkoutActivity.class);
                 ArrayList<LatLng> locations_parcelable = new ArrayList<>();
                 ArrayList<Lat_Lng> locations = clicked_workout.getLocations();
@@ -74,26 +79,27 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        workout_data = new ArrayList<>();
+        past_workout_list = new ArrayList<PastWorkout>();
+        adapter = new PastWorkoutAdapter(this, past_workout_list);
+        listView.setAdapter(adapter);
 
-        // TODO: Fix datachange function
         databaseReference.child("users").child(user.getUid()).child("workouts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<String> test_list = new ArrayList<>();
                 int i = 1;
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                     Workout workout = ds.getValue(Workout.class);
-                    workout_data.add(workout);
                     float distance_miles = workout.getDistance_miles();
                     int duration_seconds = workout.getDuration();;
                     String duration = String.valueOf(duration_seconds);
                     String combined = i + ": Distance: " + new DecimalFormat("#.##").format(distance_miles) + " Miles Duration: " + duration + " seconds";
+
+                    PastWorkout pastWorkout = new PastWorkout(combined, workout);
+                    adapter.add(pastWorkout);
                     i++;
-                    test_list.add(combined);
                 }
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(ProfileActivity.this, android.R.layout.simple_list_item_1, test_list);
-                workouts_list.setAdapter(arrayAdapter);
+                //ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(ProfileActivity.this, android.R.layout.simple_list_item_1, test_list);
+
                 progressDialog.dismiss();
             }
 
@@ -119,3 +125,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
 // TODO: Convert seconds to minutes/hours...etc
 // TODO: Consider menu with start/past workouts seperate
+// TODO: Explore multi-threading
+// TODO: Improve code quality
+// TODO: improve listview appearance
+// TODO: add delete button functionality
+// TODO: unify variable name style
