@@ -29,7 +29,9 @@ public class PastWorkoutAdapter extends ArrayAdapter<PastWorkout> {
         }
 
         TextView test = (TextView) convertView.findViewById(R.id.test_string);
-        test.setText(pastWorkout.getToDisplay());
+        if(pastWorkout != null) {
+            test.setText(pastWorkout.getToDisplay());
+        }
         ImageButton imageButton = (ImageButton) convertView.findViewById(R.id.delete_btn);
         imageButton.setFocusable(false);
         return convertView;

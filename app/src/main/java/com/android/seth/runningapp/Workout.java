@@ -1,8 +1,5 @@
 package com.android.seth.runningapp;
 
-import com.google.android.gms.maps.model.LatLng;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -13,18 +10,18 @@ public class Workout {
     private ArrayList<Lat_Lng> locations;
     private ArrayList<Integer> times;
     private String date;
-    private float distance_miles;
+    private float distanceMiles;
     private int duration;
 
     public Workout(){
 
     }
 
-    public Workout(ArrayList<Lat_Lng> locations, ArrayList<Integer> times, String date, float distance_miles, int duration){
+    public Workout(ArrayList<Lat_Lng> locations, ArrayList<Integer> times, String date, float distanceMiles, int duration){
         this.locations = locations;
         this.times = times;
         this.date = date;
-        this.distance_miles = distance_miles;
+        this.distanceMiles = distanceMiles;
         this.duration = duration;
     }
 
@@ -40,18 +37,15 @@ public class Workout {
         this.date = date;
     }
 
-    public float getDistance_miles() {
-        return distance_miles;
+    public float getDistanceMiles() {
+        return distanceMiles;
     }
 
-    public void setDistance_miles(float distance_miles) {
-        this.distance_miles = distance_miles;
+    public void setDistanceMiles(float distanceMiles) {
+        this.distanceMiles = distanceMiles;
     }
 
-    public String getDate() {
-
-        return date;
-    }
+    public String getDate() {return date;}
 
     public ArrayList<Lat_Lng> getLocations(){
         return locations;

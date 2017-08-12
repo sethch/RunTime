@@ -30,24 +30,16 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class PastWorkoutActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
-
-    private TextView time_stat;
-    private TextView pace_stat;
-    private TextView distance_stat;
-
+    private TextView paceStat;
     private ArrayList<LatLng> locations;
     private ArrayList<Integer> times;
-    private String date;
-    private float distance_miles;
-    private int duration;
-    private float pace;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +49,16 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
             initMap();
         }
         Intent intent = getIntent();
-        time_stat = (TextView) findViewById(R.id.time_stat);
-        pace_stat = (TextView) findViewById(R.id.pace_stat);
-        distance_stat = (TextView) findViewById(R.id.distance_stat);
-        date = intent.getStringExtra("WORKOUT_DATE");
-        distance_miles = intent.getFloatExtra("WORKOUT_DISTANCE", 0f);
-        duration = intent.getIntExtra("WORKOUT_DURATION", 0);
+        TextView timeStat = (TextView) findViewById(R.id.time_stat);
+        paceStat = (TextView) findViewById(R.id.pace_stat);
+        TextView distanceStat = (TextView) findViewById(R.id.distance_stat);
+        float distanceMiles = intent.getFloatExtra("WORKOUT_DISTANCE", 0f);
+        int duration = intent.getIntExtra("WORKOUT_DURATION", 0);
         locations = intent.getParcelableArrayListExtra("WORKOUT_LOCATIONS");
         times = intent.getIntegerArrayListExtra("WORKOUT_TIMES");
-        time_stat.setText("Time: " + getTime(duration));
-        distance_stat.setText("Distance: " + new DecimalFormat("#.##").format(distance_miles) + " miles");
+        String time = "Time: "  + getTime(duration);
+        timeStat.setText(time);
+        distanceStat.setText("Distance: " + new DecimalFormat("#.##").format(distanceMiles) + " miles");
     }
 
 
@@ -211,24 +203,19 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                     // Permission was granted.
                     if (ContextCompat.checkSelfPermission(this,
                             android.Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
-
                         if (mGoogleApiClient == null) {
                             buildGoogleApiClient();
                         }
                         mGoogleMap.setMyLocationEnabled(true);
                     }
-
                 } else {
-
                     // Permission denied, Disable the functionality that depends on this permission.
                     Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
                 }
-                return;
             }
         }
     }
@@ -274,16 +261,16 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         if(locations != null) {
             int i = 0;
             float dist = 0f;
-            float prev_dist = 0f;
+            float prevDist;
             Location previous = new Location(LocationManager.GPS_PROVIDER);
             Location current = new Location(LocationManager.GPS_PROVIDER);
             for (LatLng curr : locations) {
                 current.setLatitude(curr.latitude);
                 current.setLongitude(curr.longitude);
                 if(i > 0) {
-                    prev_dist = dist;
+                    prevDist = dist;
                     dist += current.distanceTo(previous) / 1609.34f;
-                    if((int)prev_dist < (int)dist){
+                    if((int)prevDist < (int)dist){
                         mile_markers.add(i);
                     }
                 }
@@ -292,10 +279,10 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
                 i++;
             }
             int duration_temp = times.get(times.size()-1);
-            pace = duration_temp / dist;
+            float pace = duration_temp / dist;
             int pace_minutes = (int)pace/60;
             int pace_seconds = (int)pace%60;
-            pace_stat.setText(pace_minutes + new DecimalFormat(".##").format((float)pace_seconds/60) + " min/mile");
+            paceStat.setText(pace_minutes + new DecimalFormat(".##").format((float)pace_seconds/60) + " min/mile");
         }
         int i = 1;
         for(Integer index : mile_markers){
@@ -321,10 +308,10 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         int minutes = total_minutes % 60;
         int seconds = total_seconds % 60;
         if(hours == 0){
-            to_return = String.format("%1$01d:%2$02d", minutes, seconds);
+            to_return = String.format(Locale.US, "%1$01d:%2$02d", minutes, seconds);
         }
         else{
-            to_return = String.format("%1$01d:%2$02d:%3$02d", hours, minutes, seconds);
+            to_return = String.format(Locale.US, "%1$01d:%2$02d:%3$02d", hours, minutes, seconds);
         }
         return to_return;
     }

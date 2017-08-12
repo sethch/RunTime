@@ -26,8 +26,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Button buttonRegister;
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private TextView textViewSignup;
-
+    private TextView textViewSignUp;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
 
@@ -42,22 +41,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         buttonRegister = (Button) findViewById(R.id.register_submit);
         editTextEmail = (EditText) findViewById(R.id.register_email_editText);
         editTextPassword = (EditText) findViewById(R.id.register_password_editText);
-        textViewSignup = (TextView) findViewById(R.id.login_link);
+        textViewSignUp = (TextView) findViewById(R.id.login_link);
 
         buttonRegister.setOnClickListener(this);
-        textViewSignup.setOnClickListener(this);
+        textViewSignUp.setOnClickListener(this);
     }
 
     /**
      * This is called upon clicking one of the RegisterActivity links
-     * @param v which view has been clicked
+     * @param v selected view
      */
     @Override
     public void onClick(View v) {
         if(v == buttonRegister){
             registerUser();
         }
-        if(v == textViewSignup){
+        if(v == textViewSignUp){
             finish();
             Intent startLogin = new Intent(RegisterActivity.this, LoginActivity.class);
             RegisterActivity.this.startActivity(startLogin);
@@ -65,8 +64,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     /**
-     * Called upon clicking the register button
-     * Verifies correct format for email and password, then registers user
+     * Called upon clicking the register button. Verifies correct
+     * format for email and password, then registers user.
      */
     private void registerUser(){
         String email = editTextEmail.getText().toString().trim();
@@ -104,3 +103,5 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
 }
+
+// TODO: Increase account user/pw requirements

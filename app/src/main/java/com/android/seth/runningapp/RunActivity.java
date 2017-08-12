@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
-import android.os.Parcel;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -49,13 +48,12 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Locale;
 
 public class RunActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
-    private LocationRequest mLocationRequest;
     private Location mLastLocation;
 
     private DatabaseReference databaseReference;
@@ -65,25 +63,24 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     private TextView timer;
     private TextView distance;
     private TextView pace;
-    private Button resume_pause_button;
-    private Button finish_button;
-    private long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L;
+    private Button resumePauseButton;
+    private Button finishButton;
+    private long millisecondTime, startTime, timeBuff = 0L;
     private Handler handler;
     private int Seconds, Minutes;
 
     // Will take info from mLastLocation and convert to latitude/longitude for polylines
-    private LatLng last_location;
-    private LatLng curr_location;
+    private LatLng lastLocation;
+    private LatLng currLocation;
     private ArrayList<LatLng> locations;
     private ArrayList<Integer> times;
 
-    private float distance_traveled_meters = 0;
-    private float distance_traveled_miles = 0;
-    private final float meters_in_mile = 1609.34f;
+    private float distanceTraveledMeters = 0;
+    private float distanceTraveledMiles = 0;
 
     private boolean begin = true;
     private boolean paused = true;
-    private boolean workout_started = false;
+    private boolean workoutStarted = false;
 
     /**
      * Checks if google play services available.
@@ -98,8 +95,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         timer = (TextView) findViewById(R.id.timer);
         distance = (TextView) findViewById(R.id.distance);
         pace = (TextView) findViewById(R.id.pace);
-        resume_pause_button = (Button) findViewById(R.id.start_button);
-        finish_button = (Button) findViewById(R.id.finish_button);
+        resumePauseButton = (Button) findViewById(R.id.start_button);
+        finishButton = (Button) findViewById(R.id.finish_button);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         handler = new Handler();
@@ -108,14 +105,14 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             restoreVariables(savedInstanceState);
         }
         else{
-            locations = new ArrayList<LatLng>();
-            times = new ArrayList<Integer>();
-            resume_pause_button.setTag(1);
-            resume_pause_button.setText("Start");
+            locations = new ArrayList<>();
+            times = new ArrayList<>();
+            resumePauseButton.setTag(1);
+            resumePauseButton.setText(getString(R.string.start));
         }
         if (googleServicesAvailable()) {
-            resume_pause_button.setOnClickListener(this);
-            finish_button.setOnClickListener(this);
+            resumePauseButton.setOnClickListener(this);
+            finishButton.setOnClickListener(this);
             initMap();
         } else {
             Toast.makeText(this, "Google maps not supported", Toast.LENGTH_LONG).show();
@@ -145,23 +142,23 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      */
     @Override
     public void onLocationChanged(Location location) {
-        if (begin == true) {
+        if (begin) {
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
             begin = false;
         }
-        if (paused == false) {
+        if (!paused) {
             if (mLastLocation != null) {
-                distance_traveled_meters = distance_traveled_meters + location.distanceTo(mLastLocation);
-                distance_traveled_miles = distance_traveled_meters / meters_in_mile;
+                distanceTraveledMeters = distanceTraveledMeters + location.distanceTo(mLastLocation);
+                distanceTraveledMiles = distanceTraveledMeters / 1609.34f;
             }
             mLastLocation = location;
-            last_location = curr_location;
-            curr_location = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            locations.add(curr_location);
+            lastLocation = currLocation;
+            currLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+            locations.add(currLocation);
             times.add(new Integer(Seconds + (Minutes*60)));
-            if (last_location != null) {
-                Polyline polyline = mGoogleMap.addPolyline(new PolylineOptions()
-                        .add(last_location).add(curr_location).width(10).color(Color.RED));
+            if (lastLocation != null) {
+                mGoogleMap.addPolyline(new PolylineOptions()
+                        .add(lastLocation).add(currLocation).width(10).color(Color.RED));
             }
         }
     }
@@ -173,24 +170,24 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      */
     @Override
     public void onClick(View v) {
-        if (v == resume_pause_button) {
+        if (v == resumePauseButton) {
             int status = (int) v.getTag();
             if (status == 1) {
-                StartTime = SystemClock.uptimeMillis();
+                startTime = SystemClock.uptimeMillis();
                 handler.postDelayed(runnable, 0);
-                resume_pause_button.setText("Pause");
+                resumePauseButton.setText(getString(R.string.pause));
                 v.setTag(0);
                 paused = false;
-                workout_started = true;
+                workoutStarted = true;
             } else {
-                TimeBuff += MillisecondTime;
+                timeBuff += millisecondTime;
                 handler.removeCallbacks(runnable);
-                resume_pause_button.setText("Resume");
+                resumePauseButton.setText(getString(R.string.resume));
                 v.setTag(1);
                 paused = true;
             }
         }
-        if (v == finish_button) {
+        if (v == finishButton) {
             handler.removeCallbacks(runnable);
             storeWorkout();
         }
@@ -208,10 +205,13 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         cal.add(Calendar.DATE, 0);
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd hh:mm aaa");
         String formatted_date = format1.format(cal.getTime());
-        Workout workout = new Workout(temp_locations, times, formatted_date, distance_traveled_miles, Seconds + Minutes*60);
+        Workout workout = new Workout(temp_locations, times, formatted_date, distanceTraveledMiles, Seconds + Minutes*60);
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        String key = databaseReference.child("users").child(user.getUid()).child("workouts").push().getKey();
-        databaseReference.child("users").child(user.getUid()).child("workouts").child(key).setValue(workout);
+        // TODO: improve
+        if(user != null) {
+            String key = databaseReference.child("users").child(user.getUid()).child("workouts").push().getKey();
+            databaseReference.child("users").child(user.getUid()).child("workouts").child(key).setValue(workout);
+        }
         Toast.makeText(this, "Workout saved", Toast.LENGTH_LONG).show();
         finish();
     }
@@ -220,21 +220,21 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      * Helper function for updating timer and distance at top of app.
      */
     public void setTimerAndDistance(){
-        UpdateTime = TimeBuff + MillisecondTime;
+        float UpdateTime = timeBuff + millisecondTime;
         Seconds = (int) (UpdateTime / 1000);
         Minutes = Seconds / 60;
         Seconds = Seconds % 60;
         timer.setText("Time:" + Minutes + ":"
-                + String.format("%02d", Seconds));
+                + String.format(Locale.US, "%02d", Seconds));
 
-        int whole_number = (int) Math.floor(distance_traveled_miles);
-        int first_two_decimals = (int) Math.floor((distance_traveled_miles - whole_number) * 100);
+        int whole_number = (int) Math.floor(distanceTraveledMiles);
+        int first_two_decimals = (int) Math.floor((distanceTraveledMiles - whole_number) * 100);
         distance.setText(whole_number + "."
-                + String.format("%02d", first_two_decimals) + " miles");
+                + String.format(Locale.US, "%02d", first_two_decimals) + " miles");
 
         // TODO: Increase accuracy of pace calculations A LOT
-        if(distance_traveled_miles > 0) {
-            int pace_seconds_total = (int) Math.floor((Seconds + (Minutes * 60)) / distance_traveled_miles);
+        if(distanceTraveledMiles > 0) {
+            int pace_seconds_total = (int) Math.floor((Seconds + (Minutes * 60)) / distanceTraveledMiles);
             int pace_minutes = pace_seconds_total / 60;
             int pace_seconds = pace_seconds_total % 60;
             pace.setText(pace_minutes + new DecimalFormat(".##").format((float)pace_seconds/60) + " min/mile");
@@ -246,7 +246,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      */
     public Runnable runnable = new Runnable() {
         public void run() {
-            MillisecondTime = SystemClock.uptimeMillis() - StartTime;
+            millisecondTime = SystemClock.uptimeMillis() - startTime;
             setTimerAndDistance();
             handler.postDelayed(this, 0);
         }
@@ -321,7 +321,6 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
                     // Permission denied, Disable the functionality that depends on this permission.
                     Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
                 }
-                return;
             }
 
             // other 'case' lines to check for other permissions this app might request.
@@ -364,7 +363,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      * Called when the googleMap is ready to be used.
      * Initializes googlePlayServices
      *
-     * @param googleMap
+     * @param googleMap GoogleMap to use
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -416,7 +415,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        mLocationRequest = new LocationRequest();
+        LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(4000); // Location update interval set to 2000 ms (2 seconds)
         mLocationRequest.setFastestInterval(2000); // TODO: fine tune & test
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -435,17 +434,17 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt("TAG", (int)resume_pause_button.getTag());
-        outState.putFloat("MILES", distance_traveled_miles);
-        outState.putFloat("METERS", distance_traveled_meters);
+        outState.putInt("TAG", (int) resumePauseButton.getTag());
+        outState.putFloat("MILES", distanceTraveledMiles);
+        outState.putFloat("METERS", distanceTraveledMeters);
         outState.putBoolean("BEGIN", begin);
         outState.putBoolean("PAUSED", paused);
         outState.putIntegerArrayList("TIMES", times);
         outState.putParcelableArrayList("LOCATIONS", locations);
-        outState.putLong("TIMEBUFF", TimeBuff);
-        outState.putLong("STARTTIME", StartTime);
-        outState.putParcelable("CURR_LOC", curr_location);
-        outState.putParcelable("LAST_LOC", last_location);
+        outState.putLong("TIMEBUFF", timeBuff);
+        outState.putLong("STARTTIME", startTime);
+        outState.putParcelable("CURR_LOC", currLocation);
+        outState.putParcelable("LAST_LOC", lastLocation);
         super.onSaveInstanceState(outState);
     }
 
@@ -455,33 +454,33 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      * @param savedInstanceState instance state pararmeter from onCreate
      */
     private void restoreVariables(Bundle savedInstanceState){
-        resume_pause_button.setTag(savedInstanceState.getInt("TAG"));
-        distance_traveled_miles = savedInstanceState.getFloat("MILES");
-        distance_traveled_meters = savedInstanceState.getFloat("METERS");
+        resumePauseButton.setTag(savedInstanceState.getInt("TAG"));
+        distanceTraveledMiles = savedInstanceState.getFloat("MILES");
+        distanceTraveledMeters = savedInstanceState.getFloat("METERS");
         begin = savedInstanceState.getBoolean("BEGIN");
         paused = savedInstanceState.getBoolean("PAUSED");
         locations = savedInstanceState.getParcelableArrayList("LOCATIONS");
         times = savedInstanceState.getIntegerArrayList("TIMES");
-        curr_location = savedInstanceState.getParcelable("CURR_LOC");
-        last_location = savedInstanceState.getParcelable("LAST_LOC");
-        TimeBuff = savedInstanceState.getLong("TIMEBUFF");
-        StartTime = savedInstanceState.getLong("STARTTIME");
-        if(begin == true){
-            resume_pause_button.setText("Start");
+        currLocation = savedInstanceState.getParcelable("CURR_LOC");
+        lastLocation = savedInstanceState.getParcelable("LAST_LOC");
+        timeBuff = savedInstanceState.getLong("TIMEBUFF");
+        startTime = savedInstanceState.getLong("STARTTIME");
+        if(begin){
+            resumePauseButton.setText(getString(R.string.start));
         }
-        else if((int)resume_pause_button.getTag() == 1) {
-            resume_pause_button.setText("Resume");
+        else if((int) resumePauseButton.getTag() == 1) {
+            resumePauseButton.setText(getString(R.string.resume));
             setTimerAndDistance();
         }
         else{
-            resume_pause_button.setText("Pause");
+            resumePauseButton.setText(getString(R.string.pause));
             handler.postDelayed(runnable, 0);
         }
     }
 
     /**
      * Called upon orientation change or viewing past workouts.
-     * Re-draws polylines on map according to stored list of Latitudes and Longitudes.
+     * Re-draws PolyLines on map according to stored list of Latitudes and Longitudes.
      *
      * @param location_array Array of LatLng objects with which to recreate the workout path
      */
@@ -489,7 +488,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         LatLng prev_location = null;
         for(LatLng location : location_array){
             if(location != null && prev_location != null) {
-                Polyline polyline = mGoogleMap.addPolyline(new PolylineOptions()
+                mGoogleMap.addPolyline(new PolylineOptions()
                         .add(prev_location).add(location).width(10).color(Color.RED));
             }
             prev_location = location;
@@ -523,7 +522,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
                 finish();
             }
         });
-        if(workout_started) {
+        if(workoutStarted) {
             AlertDialog dialog = builder.create();
             dialog.show();
         }
