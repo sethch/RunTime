@@ -35,5 +35,3 @@ public class PastWorkoutAdapter extends ArrayAdapter<PastWorkout> {
         return convertView;
     }
 }
-
-// TODO: ListViewAdapter for ProfileActivity

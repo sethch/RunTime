@@ -91,8 +91,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     Workout workout = ds.getValue(Workout.class);
                     float distance_miles = workout.getDistance_miles();
                     int duration_seconds = workout.getDuration();;
-                    String duration = String.valueOf(duration_seconds);
-                    String combined = i + ": Distance: " + new DecimalFormat("#.##").format(distance_miles) + " Miles Duration: " + duration + " seconds";
+                    String workout_time_string = getTime(duration_seconds);
+                    String combined = i + ": Distance: " + new DecimalFormat("#.##").format(distance_miles) + " Miles Duration: " + workout_time_string;
 
                     PastWorkout pastWorkout = new PastWorkout(combined, workout);
                     adapter.add(pastWorkout);
@@ -121,9 +121,28 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             ProfileActivity.this.startActivity(startRun);
         }
     }
+
+    /**
+     * Converts int number of seconds to an Hours:Minutes:Seconds format
+     * @param total_seconds total number of seconds
+     * @return String in correct time format
+     */
+    private String getTime(int total_seconds){
+        String to_return;
+        int total_minutes = total_seconds / 60;
+        int hours = total_minutes / 60;
+        int minutes = total_minutes % 60;
+        int seconds = total_seconds % 60;
+        if(hours == 0){
+            to_return = String.format("%1$01d:%2$02d", minutes, seconds);
+        }
+        else{
+            to_return = String.format("%1$01d:%2$02d:%3$02d", hours, minutes, seconds);
+        }
+        return to_return;
+    }
 }
 
-// TODO: Convert seconds to minutes/hours...etc
 // TODO: Consider menu with start/past workouts seperate
 // TODO: Explore multi-threading
 // TODO: Improve code quality
