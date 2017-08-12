@@ -75,7 +75,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         progressDialog.setMessage("Loading past workouts...");
         progressDialog.show();
-
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -92,13 +91,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     float distance_miles = workout.getDistance_miles();
                     int duration_seconds = workout.getDuration();;
                     String workout_time_string = getTime(duration_seconds);
-                    String combined = i + ": Distance: " + new DecimalFormat("#.##").format(distance_miles) + " Miles Duration: " + workout_time_string;
-
+                    String combined = " " + i + ": Distance: " + new DecimalFormat("#.##").format(distance_miles) + " Miles Duration: " + workout_time_string + "\n " + workout.getDate();
                     PastWorkout pastWorkout = new PastWorkout(combined, workout);
                     adapter.add(pastWorkout);
                     i++;
                 }
-                //ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(ProfileActivity.this, android.R.layout.simple_list_item_1, test_list);
 
                 progressDialog.dismiss();
             }
