@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -83,7 +84,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
      * TODO: verify connection
      */
     private void populateListView() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        FirebaseDatabase instance = FirebaseDatabase.getInstance();
+        instance.setPersistenceEnabled(true);
+        DatabaseReference databaseReference = instance.getReference();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
@@ -151,8 +154,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
 // TODO: Consider menu with start/past workouts seperate
 // TODO: Explore multi-threading
-// TODO: Improve code quality
 // TODO: improve listview appearance
 // TODO: add delete button functionality
-// TODO: unify variable name style
 // TODO: use runkeeper android listview for inspiration

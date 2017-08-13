@@ -19,6 +19,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -35,7 +36,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -101,6 +101,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         firebaseAuth = FirebaseAuth.getInstance();
         handler = new Handler();
         checkGPSandNetwork();
+        checkLocationPermission();
         if(savedInstanceState != null){
             restoreVariables(savedInstanceState);
         }
@@ -203,7 +204,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         }
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, 0);
-        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd hh:mm aaa");
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd hh:mm aaa", Locale.US);
         String formatted_date = format1.format(cal.getTime());
         Workout workout = new Workout(temp_locations, times, formatted_date, distanceTraveledMiles, Seconds + Minutes*60);
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -298,7 +299,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      */
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
@@ -542,11 +543,15 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 
         try {
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch(Exception ex) {}
+        } catch(Exception ex) {
+            Log.e("RunActivity", ex.toString());
+        }
 
         try {
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch(Exception ex) {}
+        } catch(Exception ex) {
+            Log.e("RunActivity", ex.toString());
+        }
 
         if(!gps_enabled && !network_enabled) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
