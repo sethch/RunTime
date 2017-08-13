@@ -47,7 +47,7 @@ import android.os.Handler;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class RunActivity extends AppCompatActivity implements OnMapReadyCallback,
@@ -67,7 +67,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     private Button finishButton;
     private long millisecondTime, startTime, timeBuff = 0L;
     private Handler handler;
-    private int Seconds, Minutes;
+    private int seconds, minutes;
 
     // Will take info from mLastLocation and convert to latitude/longitude for polylines
     private LatLng lastLocation;
@@ -156,7 +156,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             lastLocation = currLocation;
             currLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             locations.add(currLocation);
-            times.add(new Integer(Seconds + (Minutes*60)));
+            times.add(new Integer(seconds + (minutes *60)));
             if (lastLocation != null) {
                 mGoogleMap.addPolyline(new PolylineOptions()
                         .add(lastLocation).add(currLocation).width(10).color(Color.RED));
@@ -202,19 +202,17 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         for(LatLng l : locations){
             temp_locations.add(new Lat_Lng(l.latitude, l.longitude));
         }
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 0);
+        Date date = new Date();
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd hh:mm aaa", Locale.US);
-        String formatted_date = format1.format(cal.getTime());
-        Workout workout = new Workout(temp_locations, times, formatted_date, distanceTraveledMiles, Seconds + Minutes*60);
+        String formatted_date = format1.format(date);
+        Workout workout = new Workout(temp_locations, times, formatted_date, distanceTraveledMiles, seconds + minutes *60);
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        // TODO: improve
         if(user != null) {
             String key = databaseReference.child("users").child(user.getUid()).child("workouts").push().getKey();
             databaseReference.child("users").child(user.getUid()).child("workouts").child(key).setValue(workout);
         }
         Toast.makeText(this, "Workout saved", Toast.LENGTH_LONG).show();
-        finish();
+        startProfileActivity();
     }
 
     /**
@@ -222,11 +220,11 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      */
     public void setTimerAndDistance(){
         float UpdateTime = timeBuff + millisecondTime;
-        Seconds = (int) (UpdateTime / 1000);
-        Minutes = Seconds / 60;
-        Seconds = Seconds % 60;
-        timer.setText("Time:" + Minutes + ":"
-                + String.format(Locale.US, "%02d", Seconds));
+        seconds = (int) (UpdateTime / 1000);
+        minutes = seconds / 60;
+        seconds = seconds % 60;
+        timer.setText("Time:" + minutes + ":"
+                + String.format(Locale.US, "%02d", seconds));
 
         int whole_number = (int) Math.floor(distanceTraveledMiles);
         int first_two_decimals = (int) Math.floor((distanceTraveledMiles - whole_number) * 100);
@@ -235,7 +233,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // TODO: Increase accuracy of pace calculations A LOT
         if(distanceTraveledMiles > 0) {
-            int pace_seconds_total = (int) Math.floor((Seconds + (Minutes * 60)) / distanceTraveledMiles);
+            int pace_seconds_total = (int) Math.floor((seconds + (minutes * 60)) / distanceTraveledMiles);
             int pace_minutes = pace_seconds_total / 60;
             int pace_seconds = pace_seconds_total % 60;
             pace.setText(pace_minutes + new DecimalFormat(".##").format((float)pace_seconds/60) + " min/mile");
@@ -520,7 +518,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         });
         builder.setNegativeButton("Don't Store", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                finish();
+                startProfileActivity();
             }
         });
         if(workoutStarted) {
@@ -528,8 +526,14 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             dialog.show();
         }
         else{
-            finish();
+            startProfileActivity();
         }
+    }
+
+    private void startProfileActivity() {
+        Intent profileActivity = new Intent(RunActivity.this, ProfileActivity.class);
+        RunActivity.this.startActivity(profileActivity);
+        finish();
     }
 
     /**
@@ -576,3 +580,4 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 
 // TODO: Improve AlertDialog appearance in onBackPressed() and checkGPSandNetwork()
 // TODO: Potentially check whether user enabled location tracking in checkGPSandNetwork()
+// TODO: Potentially fix onDataChange function to not duplicate elements when new workout is stored

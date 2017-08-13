@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -20,10 +21,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener{
@@ -37,6 +41,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        Date d = new Date();
         Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolBar);
         beginButton = (Button) findViewById(R.id.push_button);
@@ -74,6 +79,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 pastWorkout.putIntegerArrayListExtra("WORKOUT_TIMES", clicked_workout.getTimes());
                 pastWorkout.putExtra("WORKOUT_DISTANCE", clicked_workout.getDistanceMiles());
                 ProfileActivity.this.startActivity(pastWorkout);
+                finish();
             }
         });
     }
@@ -85,7 +91,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
      */
     private void populateListView() {
         FirebaseDatabase instance = FirebaseDatabase.getInstance();
-        instance.setPersistenceEnabled(true);
         DatabaseReference databaseReference = instance.getReference();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -99,15 +104,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     int i = 1;
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         Workout workout = ds.getValue(Workout.class);
-                        float distance_miles = workout.getDistanceMiles();
-                        int duration_seconds = workout.getDuration();
-                        String workout_time_string = getTime(duration_seconds);
-                        String combined = " " + i + ": Distance: " + new DecimalFormat("#.##").format(distance_miles) + " Miles Duration: " + workout_time_string + "\n " + workout.getDate();
+                        float distanceMiles = workout.getDistanceMiles();
+                        int durationSeconds = workout.getDuration();
+                        String workoutTimeString = getTime(durationSeconds);
+                        String combined = " " + new DecimalFormat("#.##").format(distanceMiles) + " mi Time: " + workoutTimeString + "\n " + workout.getDate();
                         PastWorkout pastWorkout = new PastWorkout(combined, workout);
                         adapter.add(pastWorkout);
                         i++;
                     }
-
                     progressDialog.dismiss();
                 }
 
@@ -157,3 +161,4 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 // TODO: improve listview appearance
 // TODO: add delete button functionality
 // TODO: use runkeeper android listview for inspiration
+// TODO: Instead of date use time from present
