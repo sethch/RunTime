@@ -212,7 +212,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             databaseReference.child("users").child(user.getUid()).child("workouts").child(key).setValue(workout);
         }
         Toast.makeText(this, "Workout saved", Toast.LENGTH_LONG).show();
-        startProfileActivity();
+        finish();
     }
 
     /**
@@ -518,7 +518,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         });
         builder.setNegativeButton("Don't Store", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                startProfileActivity();
+                finish();
             }
         });
         if(workoutStarted) {
@@ -526,17 +526,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             dialog.show();
         }
         else{
-            startProfileActivity();
+            finish();
         }
-    }
-
-    /**
-     * Starts HistoryActivity upon leaving RunActivity.
-     */
-    private void startProfileActivity() {
-        Intent profileActivity = new Intent(RunActivity.this, HistoryActivity.class);
-        RunActivity.this.startActivity(profileActivity);
-        finish();
     }
 
     /**

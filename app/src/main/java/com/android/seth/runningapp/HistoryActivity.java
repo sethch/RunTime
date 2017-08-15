@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.android.seth.runningapp.listview.PastWorkout;
@@ -26,9 +25,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class HistoryActivity extends AppCompatActivity implements View.OnClickListener{
+public class HistoryActivity extends AppCompatActivity{
 
-    private Button beginButton;
     private ArrayList<PastWorkout> pastWorkoutList;
     private ProgressDialog progressDialog;
     private PastWorkoutAdapter adapter;
@@ -37,8 +35,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-        beginButton = (Button) findViewById(R.id.push_button);
-        beginButton.setOnClickListener(this);
         progressDialog = new ProgressDialog(this);
         ListView listView = (ListView) findViewById(R.id.history_listView);
         setListViewOnClick(listView);
@@ -118,18 +114,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                 }
             });
-        }
-    }
-
-    /**
-     * This is called upon clicking one of the RegisterActivity links
-     * @param v which view has been clicked
-     */
-    @Override
-    public void onClick(View v) {
-        if(v == beginButton){
-            Intent startRun = new Intent(HistoryActivity.this, RunActivity.class);
-            HistoryActivity.this.startActivity(startRun);
         }
     }
 

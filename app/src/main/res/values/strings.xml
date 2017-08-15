@@ -9,6 +9,7 @@
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
     <string name="options">Options</string>
+    <string name="history">History</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
