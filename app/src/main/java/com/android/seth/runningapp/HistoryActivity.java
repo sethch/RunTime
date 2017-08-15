@@ -40,7 +40,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         beginButton = (Button) findViewById(R.id.push_button);
         beginButton.setOnClickListener(this);
         progressDialog = new ProgressDialog(this);
-        ListView listView = (ListView) findViewById(R.id.profile_listView);
+        ListView listView = (ListView) findViewById(R.id.history_listView);
         setListViewOnClick(listView);
         pastWorkoutList = new ArrayList<>();
         adapter = new PastWorkoutAdapter(this, pastWorkoutList);
@@ -156,9 +156,9 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
 // TODO: Consider menu with start/past workouts seperate
 // TODO: Explore multi-threading
-// TODO: improve listview appearance
+// TODO: improve history_listview appearance
 // TODO: add delete button functionality
-// TODO: use runkeeper android listview for inspiration
+// TODO: use runkeeper android history_listview for inspiration
 // TODO: Instead of date use time from present
 // TODO: add toolbar at top of profile with ability to view user statistics, start new activity, logout, potentially more
-// TODO: ensure toolbar does not cover any listview items
+// TODO: ensure toolbar does not cover any history_listview items

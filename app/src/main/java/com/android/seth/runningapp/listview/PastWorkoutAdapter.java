@@ -25,10 +25,10 @@ public class PastWorkoutAdapter extends ArrayAdapter<PastWorkout> {
     public View getView(int position, View convertView, ViewGroup parent){
         PastWorkout pastWorkout = getItem(position);
         if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.listview, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.history_listview, parent, false);
         }
 
-        TextView test = (TextView) convertView.findViewById(R.id.test_string);
+        TextView test = (TextView) convertView.findViewById(R.id.history_list_string);
         if(pastWorkout != null) {
             test.setText(pastWorkout.getToDisplay());
         }
