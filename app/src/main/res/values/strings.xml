@@ -1,13 +1,14 @@
 <resources>
     <string name="app_name">RunTime</string>
-    <string name="recorded">Recorded</string>
     <string name="settings">Settings</string>
-    <string name="begin"><b>Begin</b></string>
+    <string name="begin">Begin</string>
+    <string name="statistics">Statistics</string>
     <string name="api_key" templateMergeStrategy="preserve" translatable="false">AIzaSyCiC-wRWe9Bd90SgO_LdbkDAnA0Vzq1jdY</string>
     <string name="title_activity_login">Sign in</string>
     <string name="start">Start</string>
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
+    <string name="options">Options</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

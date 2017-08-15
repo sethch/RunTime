@@ -4,8 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -22,15 +22,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Locale;
 
-public class ProfileActivity extends AppCompatActivity implements View.OnClickListener{
+public class HistoryActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Button beginButton;
     private ArrayList<PastWorkout> pastWorkoutList;
@@ -40,10 +36,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
-        Date d = new Date();
-        Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolBar);
+        setContentView(R.layout.activity_history);
         beginButton = (Button) findViewById(R.id.push_button);
         beginButton.setOnClickListener(this);
         progressDialog = new ProgressDialog(this);
@@ -53,6 +46,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         adapter = new PastWorkoutAdapter(this, pastWorkoutList);
         listView.setAdapter(adapter);
         populateListView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
     }
 
     /**
@@ -65,7 +65,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Workout clicked_workout = pastWorkoutList.get(position).getWorkout();
-                Intent pastWorkout = new Intent(ProfileActivity.this, PastWorkoutActivity.class);
+                Intent pastWorkout = new Intent(HistoryActivity.this, PastWorkoutActivity.class);
                 ArrayList<LatLng> locations_parcelable = new ArrayList<>();
                 ArrayList<Lat_Lng> locations = clicked_workout.getLocations();
                 if(locations != null) {
@@ -78,7 +78,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 pastWorkout.putParcelableArrayListExtra("WORKOUT_LOCATIONS", locations_parcelable);
                 pastWorkout.putIntegerArrayListExtra("WORKOUT_TIMES", clicked_workout.getTimes());
                 pastWorkout.putExtra("WORKOUT_DISTANCE", clicked_workout.getDistanceMiles());
-                ProfileActivity.this.startActivity(pastWorkout);
+                HistoryActivity.this.startActivity(pastWorkout);
                 finish();
             }
         });
@@ -101,7 +101,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             databaseReference.child("users").child(user.getUid()).child("workouts").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    int i = 1;
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         Workout workout = ds.getValue(Workout.class);
                         float distanceMiles = workout.getDistanceMiles();
@@ -110,7 +109,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         String combined = " " + new DecimalFormat("#.##").format(distanceMiles) + " mi Time: " + workoutTimeString + "\n " + workout.getDate();
                         PastWorkout pastWorkout = new PastWorkout(combined, workout);
                         adapter.add(pastWorkout);
-                        i++;
                     }
                     progressDialog.dismiss();
                 }
@@ -130,8 +128,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if(v == beginButton){
-            Intent startRun = new Intent(ProfileActivity.this, RunActivity.class);
-            ProfileActivity.this.startActivity(startRun);
+            Intent startRun = new Intent(HistoryActivity.this, RunActivity.class);
+            HistoryActivity.this.startActivity(startRun);
         }
     }
 
@@ -162,3 +160,5 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 // TODO: add delete button functionality
 // TODO: use runkeeper android listview for inspiration
 // TODO: Instead of date use time from present
+// TODO: add toolbar at top of profile with ability to view user statistics, start new activity, logout, potentially more
+// TODO: ensure toolbar does not cover any listview items

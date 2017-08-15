@@ -91,7 +91,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
                             finish();
-                            Intent startProfile = new Intent(RegisterActivity.this, ProfileActivity.class);
+                            Intent startProfile = new Intent(RegisterActivity.this, HistoryActivity.class);
                             RegisterActivity.this.startActivity(startProfile);
                         }
                         else {

@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if(firebaseAuth.getCurrentUser() != null){
             finish();
-            Intent startProfile = new Intent(LoginActivity.this, ProfileActivity.class);
+            Intent startProfile = new Intent(LoginActivity.this, HistoryActivity.class);
             LoginActivity.this.startActivity(startProfile);
         }
 
@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
                             finish();
-                            Intent startProfile = new Intent(LoginActivity.this, ProfileActivity.class);
+                            Intent startProfile = new Intent(LoginActivity.this, HistoryActivity.class);
                             LoginActivity.this.startActivity(startProfile);
                         }
                         else {

@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/recorded"
-        android:icon="@android:drawable/ic_menu_myplaces"
-        android:title="@string/recorded"
-        app:showAsAction="ifRoom"
-        />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <item android:id="@+id/options"
+        android:title="@string/options">
+        <menu>
+            <item android:id="@+id/begin"
+                android:icon="@drawable/ic_play_light"
+                android:title="@string/begin"
+                app:showAsAction="ifRoom"/>
+            <item android:id="@+id/statistics"
+                android:icon="@drawable/ic_play_dark"
+                android:title="@string/statistics" />
+        </menu>
+    </item>
+
 </menu>

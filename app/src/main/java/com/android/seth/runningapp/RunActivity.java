@@ -530,8 +530,11 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Starts HistoryActivity upon leaving RunActivity.
+     */
     private void startProfileActivity() {
-        Intent profileActivity = new Intent(RunActivity.this, ProfileActivity.class);
+        Intent profileActivity = new Intent(RunActivity.this, HistoryActivity.class);
         RunActivity.this.startActivity(profileActivity);
         finish();
     }
