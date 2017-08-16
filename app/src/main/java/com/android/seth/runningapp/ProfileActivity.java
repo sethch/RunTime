@@ -1,6 +1,5 @@
 package com.android.seth.runningapp;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -12,10 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-/**
- * Created by Seth on 8/14/2017.
- */
 
 public class ProfileActivity extends AppCompatActivity {
     private String[] drawerOptions = {"Begin", "History", "Settings"};
@@ -51,11 +46,15 @@ public class ProfileActivity extends AppCompatActivity {
             }
         };
         mDrawerLayout.addDrawerListener(mDrawerToggle);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
+    /**
+     * Allows App Icon to change upon Navigation Drawer opening/closing.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -63,12 +62,22 @@ public class ProfileActivity extends AppCompatActivity {
         mDrawerToggle.syncState();
     }
 
+    /**
+     * Handles activity changes such as orientation.
+     *
+     * @param newConfig     new Activity configuration.
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    /**
+     * Sets onClickListener for each ListView item in the Navigation Drawer.
+     *
+     * @param mDrawerList   navigation drawer listview to set listener for
+     */
     private void setListViewOnitemClick(ListView mDrawerList) {
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
@@ -91,6 +100,12 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Handles opening Navigation Drawer with touching App Icon.
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
@@ -98,10 +113,7 @@ public class ProfileActivity extends AppCompatActivity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle your other action bar items...
-
+        // Handle your other action bar items
         return super.onOptionsItemSelected(item);
     }
 }
-
-// TODO: Comments

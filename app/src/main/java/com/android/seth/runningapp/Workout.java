@@ -2,10 +2,6 @@ package com.android.seth.runningapp;
 
 import java.util.ArrayList;
 
-/**
- * Created by Seth on 4/19/2017.
- */
-
 public class Workout {
     private ArrayList<Lat_Lng> locations;
     private ArrayList<Integer> times;

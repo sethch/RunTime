@@ -12,10 +12,6 @@ import com.android.seth.runningapp.R;
 
 import java.util.ArrayList;
 
-/**
- * Created by Seth on 8/8/2017.
- */
-
 public class PastWorkoutAdapter extends ArrayAdapter<PastWorkout> {
     public PastWorkoutAdapter(Context context, ArrayList<PastWorkout> pastWorkout){
         super(context, 0, pastWorkout);

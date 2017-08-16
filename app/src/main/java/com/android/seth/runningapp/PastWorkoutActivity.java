@@ -317,6 +317,5 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
     }
 }
 
-// TODO: logout functionality
 // TODO: add delete button to either history_listview or PastWorkoutActivity
 // TODO: Improve mile marker looks/labeling

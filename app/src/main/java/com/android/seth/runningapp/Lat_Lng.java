@@ -1,9 +1,5 @@
 package com.android.seth.runningapp;
 
-/**
- * Created by Seth on 4/19/2017.
- */
-
 public class Lat_Lng {
     private double latitude;
     private double longitude;

@@ -138,11 +138,9 @@ public class HistoryActivity extends AppCompatActivity{
     }
 }
 
-// TODO: Consider menu with start/past workouts seperate
 // TODO: Explore multi-threading
 // TODO: improve history_listview appearance
 // TODO: add delete button functionality
 // TODO: use runkeeper android history_listview for inspiration
 // TODO: Instead of date use time from present
-// TODO: add toolbar at top of profile with ability to view user statistics, start new activity, logout, potentially more
 // TODO: ensure toolbar does not cover any history_listview items
