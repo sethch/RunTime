@@ -104,4 +104,4 @@ public class ProfileActivity extends AppCompatActivity {
     }
 }
 
-// TODO: FIX THIS "https://developer.android.com/training/implementing-navigation/nav-drawer.html#Init"
+// TODO: Comments
