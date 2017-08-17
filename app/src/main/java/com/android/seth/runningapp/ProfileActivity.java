@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -14,18 +15,18 @@ import android.widget.ListView;
 
 public class ProfileActivity extends AppCompatActivity {
     private String[] drawerOptions = {"Begin", "History", "Settings"};
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
+    private ActionBar actionBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigation_drawer);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer);
+        ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions));
         setListViewOnitemClick(mDrawerList);
+        actionBar = getSupportActionBar();
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                             /* host Activity */
@@ -36,24 +37,24 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                getSupportActionBar().setTitle("RunTime");
+                actionBar.setTitle("RunTime");
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("RunTime");
+                actionBar.setTitle("RunTime");
             }
         };
         mDrawerLayout.addDrawerListener(mDrawerToggle);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
     }
 
     /**
      * Allows App Icon to change upon Navigation Drawer opening/closing.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState    Instance state of activity.
      */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -103,8 +104,8 @@ public class ProfileActivity extends AppCompatActivity {
     /**
      * Handles opening Navigation Drawer with touching App Icon.
      *
-     * @param item
-     * @return
+     * @param item  Selected MenuItem
+     * @return  superclass implementation
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -117,3 +118,6 @@ public class ProfileActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+
+// TODO: Add content for main screen
+// TODO: Improve looks of Nav Drawer

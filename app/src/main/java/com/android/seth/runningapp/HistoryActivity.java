@@ -4,8 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -30,10 +28,16 @@ public class HistoryActivity extends AppCompatActivity{
     private ArrayList<PastWorkout> pastWorkoutList;
     private ProgressDialog progressDialog;
     private PastWorkoutAdapter adapter;
+    DatabaseReference databaseReference;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseDatabase instance = FirebaseDatabase.getInstance();
+        databaseReference = instance.getReference();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
         setContentView(R.layout.activity_history);
         progressDialog = new ProgressDialog(this);
         ListView listView = (ListView) findViewById(R.id.history_listView);
@@ -42,13 +46,6 @@ public class HistoryActivity extends AppCompatActivity{
         adapter = new PastWorkoutAdapter(this, pastWorkoutList);
         listView.setAdapter(adapter);
         populateListView();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
     }
 
     /**
@@ -86,10 +83,6 @@ public class HistoryActivity extends AppCompatActivity{
      * TODO: verify connection
      */
     private void populateListView() {
-        FirebaseDatabase instance = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = instance.getReference();
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();
 
         progressDialog.setMessage("Loading past workouts...");
         progressDialog.show();
@@ -103,7 +96,7 @@ public class HistoryActivity extends AppCompatActivity{
                         int durationSeconds = workout.getDuration();
                         String workoutTimeString = getTime(durationSeconds);
                         String combined = " " + new DecimalFormat("#.##").format(distanceMiles) + " mi Time: " + workoutTimeString + "\n " + workout.getDate();
-                        PastWorkout pastWorkout = new PastWorkout(combined, workout);
+                        PastWorkout pastWorkout = new PastWorkout(combined, workout, ds.getKey());
                         adapter.add(pastWorkout);
                     }
                     progressDialog.dismiss();
@@ -136,11 +129,11 @@ public class HistoryActivity extends AppCompatActivity{
         }
         return to_return;
     }
+
 }
 
 // TODO: Explore multi-threading
-// TODO: improve history_listview appearance
-// TODO: add delete button functionality
-// TODO: use runkeeper android history_listview for inspiration
+// TODO: improve listview_history appearance
+// TODO: use runkeeper android listview_history for inspiration
 // TODO: Instead of date use time from present
-// TODO: ensure toolbar does not cover any history_listview items
+// TODO: ensure toolbar does not cover any listview_history items
