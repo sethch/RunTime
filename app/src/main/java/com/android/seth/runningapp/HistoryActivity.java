@@ -46,6 +46,7 @@ public class HistoryActivity extends AppCompatActivity{
         adapter = new PastWorkoutAdapter(this, pastWorkoutList);
         listView.setAdapter(adapter);
         populateListView();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -136,3 +137,4 @@ public class HistoryActivity extends AppCompatActivity{
 // TODO: use runkeeper android listview_history for inspiration
 // TODO: Instead of date use time from present
 // TODO: ensure toolbar does not cover any listview_history items
+// TODO: Convert up button to nav drawer to make app layout horizontal instead of vertical
