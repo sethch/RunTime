@@ -83,7 +83,6 @@ public class HistoryActivity extends AppCompatActivity{
      * TODO: verify connection
      */
     private void populateListView() {
-
         progressDialog.setMessage("Loading past workouts...");
         progressDialog.show();
         if(user != null) {
