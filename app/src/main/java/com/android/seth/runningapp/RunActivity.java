@@ -202,10 +202,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         for(LatLng l : locations){
             temp_locations.add(new Lat_Lng(l.latitude, l.longitude));
         }
-        Date date = new Date();
-        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd hh:mm aaa", Locale.US);
-        String formatted_date = format1.format(date);
-        Workout workout = new Workout(temp_locations, times, formatted_date, distanceTraveledMiles, seconds + minutes *60);
+        long currentDate = System.currentTimeMillis();
+        Workout workout = new Workout(temp_locations, times, currentDate, distanceTraveledMiles, seconds + minutes *60);
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if(user != null) {
             String key = databaseReference.child("users").child(user.getUid()).child("workouts").push().getKey();
@@ -571,6 +569,9 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Starts HistoryActivity and finishes RunActivity.
+     */
     private void startHistoryActivity() {
         Intent historyActivity = new Intent(RunActivity.this, HistoryActivity.class);
         startActivity(historyActivity);

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Workout {
     private ArrayList<Lat_Lng> locations;
     private ArrayList<Integer> times;
-    private String date;
+    private long date;
     private float distanceMiles;
     private int duration;
 
@@ -13,7 +13,7 @@ public class Workout {
 
     }
 
-    public Workout(ArrayList<Lat_Lng> locations, ArrayList<Integer> times, String date, float distanceMiles, int duration){
+    public Workout(ArrayList<Lat_Lng> locations, ArrayList<Integer> times, long date, float distanceMiles, int duration){
         this.locations = locations;
         this.times = times;
         this.date = date;
@@ -29,7 +29,7 @@ public class Workout {
         this.duration = duration;
     }
 
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
@@ -41,7 +41,7 @@ public class Workout {
         this.distanceMiles = distanceMiles;
     }
 
-    public String getDate() {return date;}
+    public long getDate() {return date;}
 
     public ArrayList<Lat_Lng> getLocations(){
         return locations;

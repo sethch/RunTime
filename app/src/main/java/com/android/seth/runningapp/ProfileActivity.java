@@ -12,21 +12,50 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.google.android.gms.vision.text.Text;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Locale;
 
 public class ProfileActivity extends AppCompatActivity {
     private String[] drawerOptions = {"Begin", "History", "Settings"};
     private ActionBarDrawerToggle mDrawerToggle;
     private ActionBar actionBar;
+    private DatabaseReference databaseReference;
+    private FirebaseUser user;
+    private TextView milesWeekTextView;
+    private TextView milesAllTimeTextView;
+    private TextView numWorkoutsTextView;
+
+    final float[] milesWeek = new float[1];
+    final float[] milesAllTime = new float[1];
+    final int[] numWorkouts = new int[1];
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.navigation_drawer);
+        setContentView(R.layout.activity_profile);
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer);
         ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        milesWeekTextView = (TextView) findViewById(R.id.miles_week);
+        milesAllTimeTextView = (TextView) findViewById(R.id.miles_all_time);
+        numWorkoutsTextView = (TextView) findViewById(R.id.num_workouts);
         mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions));
         setListViewOnitemClick(mDrawerList);
         actionBar = getSupportActionBar();
+        FirebaseDatabase instance = FirebaseDatabase.getInstance();
+        databaseReference = instance.getReference();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                             /* host Activity */
@@ -37,18 +66,20 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                actionBar.setTitle("RunTime");
+                actionBar.setTitle("Profile");
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                actionBar.setTitle("RunTime");
+                actionBar.setTitle("Profile");
             }
         };
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
+        actionBar.setTitle("Profile");
+        setStats();
     }
 
     /**
@@ -117,7 +148,48 @@ public class ProfileActivity extends AppCompatActivity {
         // Handle your other action bar items
         return super.onOptionsItemSelected(item);
     }
+
+    public void setStats(){
+        final long currentDate = System.currentTimeMillis();
+        final long oneWeekAgo = currentDate - (1000*60*60*24*7);
+
+        Query query = databaseReference
+                .child("users")
+                .child(user.getUid())
+                .child("workouts")
+                .orderByChild("date");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                        Workout workout = ds.getValue(Workout.class);
+                        numWorkouts[0]++;
+                        long date = workout.getDate();
+                        float miles = workout.getDistanceMiles();
+                        milesAllTime[0] += miles;
+                        if(date >= oneWeekAgo){
+                            milesWeek[0] += miles;
+                        }
+                    }
+                }
+                setTextViews();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void setTextViews() {
+        milesWeekTextView.setText("This Week\n" + String.format(Locale.US, "%.1f", milesWeek[0]) + " miles");
+        milesAllTimeTextView.setText("All Time\n" + String.format(Locale.US, "%.1f", milesAllTime[0]) + " miles");
+        numWorkoutsTextView.setText("Number of Workouts\n" + Integer.valueOf(numWorkouts[0]));
+    }
 }
 
-// TODO: Add content for main screen
+// TODO: Add text to pace TextViews
 // TODO: Improve looks of Nav Drawer
+// TODO: Improve looks of main content

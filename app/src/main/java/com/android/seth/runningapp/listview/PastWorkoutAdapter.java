@@ -32,6 +32,14 @@ public class PastWorkoutAdapter extends ArrayAdapter<PastWorkout> {
         user = firebaseAuth.getCurrentUser();
     }
 
+    /**
+     * Initializes ListView items with layout and sets onClick listener for delete ImageButtons.
+     *
+     * @param position  Position of ListView item to initialize.
+     * @param convertView   Old view to reuse if needed.
+     * @param parent    Parent that this view will be attached to.
+     * @return
+     */
     @Override
     @NonNull
     public View getView(final int position, View convertView, @NonNull ViewGroup parent){
@@ -48,8 +56,13 @@ public class PastWorkoutAdapter extends ArrayAdapter<PastWorkout> {
         imageButton.setFocusable(false);
 
         imageButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Removes selected workout from HistoryActivity and database.
+             *
+             * @param view  Clicked view of ListView
+             */
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 databaseReference.child("users").child(user.getUid()).child("workouts").child(pastWorkout.getKey()).removeValue();
                 Toast.makeText(getContext(), "Removed Workout", Toast.LENGTH_SHORT).show();
                 pastWorkoutArrayList.remove(position);

@@ -2,6 +2,7 @@ package com.android.seth.runningapp;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,7 +21,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 public class HistoryActivity extends AppCompatActivity{
@@ -28,8 +31,8 @@ public class HistoryActivity extends AppCompatActivity{
     private ArrayList<PastWorkout> pastWorkoutList;
     private ProgressDialog progressDialog;
     private PastWorkoutAdapter adapter;
-    DatabaseReference databaseReference;
-    FirebaseUser user;
+    private DatabaseReference databaseReference;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,9 @@ public class HistoryActivity extends AppCompatActivity{
         adapter = new PastWorkoutAdapter(this, pastWorkoutList);
         listView.setAdapter(adapter);
         populateListView();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("History");
     }
 
     /**
@@ -95,7 +100,11 @@ public class HistoryActivity extends AppCompatActivity{
                         float distanceMiles = workout.getDistanceMiles();
                         int durationSeconds = workout.getDuration();
                         String workoutTimeString = getTime(durationSeconds);
-                        String combined = " " + new DecimalFormat("#.##").format(distanceMiles) + " mi Time: " + workoutTimeString + "\n " + workout.getDate();
+                        long dateLong = workout.getDate();
+                        Date date = new Date(dateLong);
+                        SimpleDateFormat format = new SimpleDateFormat("mm-dd-yyyy hh:mm a", Locale.US);
+                        String formattedDate = format.format(date);
+                        String combined = " " + new DecimalFormat("#.##").format(distanceMiles) + " mi Time: " + workoutTimeString + "\n " + formattedDate;
                         PastWorkout pastWorkout = new PastWorkout(combined, workout, ds.getKey());
                         adapter.add(pastWorkout);
                     }
