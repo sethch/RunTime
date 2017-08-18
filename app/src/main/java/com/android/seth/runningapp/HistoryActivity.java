@@ -11,6 +11,9 @@ import android.widget.ListView;
 
 import com.android.seth.runningapp.listview.PastWorkout;
 import com.android.seth.runningapp.listview.PastWorkoutAdapter;
+import com.android.seth.runningapp.util.UtilityFunctions;
+import com.android.seth.runningapp.util.Lat_Lng;
+import com.android.seth.runningapp.util.Workout;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,11 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 public class HistoryActivity extends AppCompatActivity{
 
@@ -50,8 +49,10 @@ public class HistoryActivity extends AppCompatActivity{
         listView.setAdapter(adapter);
         populateListView();
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("History");
+        if(actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle("History");
+        }
     }
 
     /**
@@ -97,16 +98,17 @@ public class HistoryActivity extends AppCompatActivity{
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         Workout workout = ds.getValue(Workout.class);
-                        float distanceMiles = workout.getDistanceMiles();
-                        int durationSeconds = workout.getDuration();
-                        String workoutTimeString = getTime(durationSeconds);
-                        long dateLong = workout.getDate();
-                        Date date = new Date(dateLong);
-                        SimpleDateFormat format = new SimpleDateFormat("mm-dd-yyyy hh:mm a", Locale.US);
-                        String formattedDate = format.format(date);
-                        String combined = " " + new DecimalFormat("#.##").format(distanceMiles) + " mi Time: " + workoutTimeString + "\n " + formattedDate;
-                        PastWorkout pastWorkout = new PastWorkout(combined, workout, ds.getKey());
-                        adapter.add(pastWorkout);
+                        if(workout != null) {
+                            float distanceMiles = workout.getDistanceMiles();
+                            int durationSeconds = workout.getDuration();
+                            String formattedTimeString = UtilityFunctions.getTimeString(durationSeconds);
+                            long workoutDateInMilliseconds = workout.getDate();
+                            String formattedDate = UtilityFunctions.getDateString(workoutDateInMilliseconds);
+                            String formattedDistance = UtilityFunctions.getDistanceString(distanceMiles);
+                            String combined = " " + formattedDistance + " Time: " + formattedTimeString + "\n " + formattedDate;
+                            PastWorkout pastWorkout = new PastWorkout(combined, workout, ds.getKey());
+                            adapter.add(pastWorkout);
+                        }
                     }
                     progressDialog.dismiss();
                 }
@@ -118,27 +120,6 @@ public class HistoryActivity extends AppCompatActivity{
             });
         }
     }
-
-    /**
-     * Converts int number of seconds to an Hours:Minutes:Seconds format
-     * @param total_seconds total number of seconds
-     * @return String in correct time format
-     */
-    private String getTime(int total_seconds){
-        String to_return;
-        int total_minutes = total_seconds / 60;
-        int hours = total_minutes / 60;
-        int minutes = total_minutes % 60;
-        int seconds = total_seconds % 60;
-        if(hours == 0){
-            to_return = String.format(Locale.US, "%1$01d:%2$02d", minutes, seconds);
-        }
-        else{
-            to_return = String.format(Locale.US, "%1$01d:%2$02d:%3$02d", hours, minutes, seconds);
-        }
-        return to_return;
-    }
-
 }
 
 // TODO: Explore multi-threading

@@ -1,4 +1,6 @@
-package com.android.seth.runningapp;
+package com.android.seth.runningapp.util;
+
+import com.android.seth.runningapp.util.Lat_Lng;
 
 import java.util.ArrayList;
 

@@ -25,6 +25,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.seth.runningapp.util.Lat_Lng;
+import com.android.seth.runningapp.util.UtilityFunctions;
+import com.android.seth.runningapp.util.Workout;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,11 +47,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import android.os.Handler;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 public class RunActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
@@ -60,9 +59,9 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     private FirebaseAuth firebaseAuth;
 
     // TIMER SECTION
-    private TextView timer;
-    private TextView distance;
-    private TextView pace;
+    private TextView timerTextView;
+    private TextView distanceTextView;
+    private TextView paceTextView;
     private Button resumePauseButton;
     private Button finishButton;
     private long millisecondTime, startTime, timeBuff = 0L;
@@ -92,9 +91,9 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
-        timer = (TextView) findViewById(R.id.timer);
-        distance = (TextView) findViewById(R.id.distance);
-        pace = (TextView) findViewById(R.id.pace);
+        timerTextView = (TextView) findViewById(R.id.timer);
+        distanceTextView = (TextView) findViewById(R.id.distance);
+        paceTextView = (TextView) findViewById(R.id.pace);
         resumePauseButton = (Button) findViewById(R.id.start_button);
         finishButton = (Button) findViewById(R.id.finish_button);
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -214,27 +213,19 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     /**
-     * Helper function for updating timer and distance at top of app.
+     * Helper function for updating TextViews at top of app.
      */
     public void setTimerAndDistance(){
         float UpdateTime = timeBuff + millisecondTime;
-        seconds = (int) (UpdateTime / 1000);
+        int totalSeconds = (int) (UpdateTime / 1000);
         minutes = seconds / 60;
-        seconds = seconds % 60;
-        timer.setText("Time:" + minutes + ":"
-                + String.format(Locale.US, "%02d", seconds));
-
-        int whole_number = (int) Math.floor(distanceTraveledMiles);
-        int first_two_decimals = (int) Math.floor((distanceTraveledMiles - whole_number) * 100);
-        distance.setText(whole_number + "."
-                + String.format(Locale.US, "%02d", first_two_decimals) + " miles");
-
-        // TODO: Increase accuracy of pace calculations A LOT
+        seconds = totalSeconds % 60;
+        String timeString = "Time: " + UtilityFunctions.getTimeString(totalSeconds);
+        timerTextView.setText(timeString);
+        distanceTextView.setText(UtilityFunctions.getDistanceString(distanceTraveledMiles));
         if(distanceTraveledMiles > 0) {
-            int pace_seconds_total = (int) Math.floor((seconds + (minutes * 60)) / distanceTraveledMiles);
-            int pace_minutes = pace_seconds_total / 60;
-            int pace_seconds = pace_seconds_total % 60;
-            pace.setText(pace_minutes + new DecimalFormat(".##").format((float)pace_seconds/60) + " min/mile");
+            float pace = (int) Math.floor((seconds + (minutes * 60)) / distanceTraveledMiles);
+            paceTextView.setText(UtilityFunctions.getPaceString(pace));
         }
     }
 

@@ -14,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.seth.runningapp.util.UtilityFunctions;
+import com.android.seth.runningapp.util.Workout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,9 +38,10 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView numWorkoutsTextView;
     private TextView bestPaceTextView;
 
-    final float[] milesWeek = new float[1];
-    final float[] milesAllTime = new float[1];
-    final int[] numWorkouts = new int[1];
+    private final float[] milesWeek = new float[1];
+    private final float[] milesAllTime = new float[1];
+    private final int[] numWorkouts = new int[1];
+    private final float[] bestPace = new float[1];
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -156,6 +159,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void setStats(){
         final long currentDate = System.currentTimeMillis();
         final long oneWeekAgo = currentDate - (1000*60*60*24*7);
+        bestPace[0] = 0f;
 
         Query query = databaseReference
                 .child("users")
@@ -174,6 +178,11 @@ public class ProfileActivity extends AppCompatActivity {
                         milesAllTime[0] += miles;
                         if(date >= oneWeekAgo){
                             milesWeek[0] += miles;
+                        }
+                        int duration = workout.getDuration();
+                        float pace = duration/miles;
+                        if(pace > bestPace[0] && miles > 0.1){
+                            bestPace[0] = pace;
                         }
                     }
                 }
@@ -195,10 +204,15 @@ public class ProfileActivity extends AppCompatActivity {
         milesTotalTextView.setText(String.format(Locale.US, "%.1f", milesAllTime[0]));
         String numWorkoutsString = String.valueOf(numWorkouts[0]);
         numWorkoutsTextView.setText(numWorkoutsString);
-        // TODO: bestPaceTextView.setText("put something here");
+        bestPaceTextView.setText(UtilityFunctions.getPaceString(bestPace[0]));
     }
 }
 
 // TODO: Add Best Pace to bestPaceTextView
 // TODO: Improve looks of Nav Drawer
 // TODO: Improve looks of main content
+// TODO: Clean up and potentially comment activity_profile xml
+// TODO: Find redundant functions and add to UtilityFunctions or other Util classes
+
+// TODO: Fix resume/pause button
+// TODO: Fix RunActivity distance tracking

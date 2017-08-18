@@ -49,6 +49,13 @@
                     android:layout_weight="0.0"
                     android:orientation="vertical">
                     <TextView
+                        android:id="@+id/miles_week"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textSize="20sp"
+                        android:textColor="@color/black" />
+                    <TextView
                         android:id="@+id/miles_week_title"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
@@ -56,14 +63,6 @@
                         android:textSize="20sp"
                         android:textColor="@color/black"
                         android:elevation="2dp" />
-                    <TextView
-                        android:id="@+id/miles_week"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:elevation="2dp"
-                        android:gravity="center_horizontal"
-                        android:textSize="20sp"
-                        android:textColor="@color/black" />
                 </LinearLayout>
                 <Space
                     android:layout_width="0dp"
@@ -75,19 +74,17 @@
                     android:layout_weight="0.0"
                     android:orientation="vertical">
                     <TextView
+                        android:id="@+id/miles_total"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textSize="20sp"
+                        android:textColor="@color/black" />
+                    <TextView
                         android:id="@+id/miles_total_title"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:text="@string/total_miles"
-                        android:textSize="20sp"
-                        android:textColor="@color/black"
-                        android:elevation="2dp" />
-                    <TextView
-                        android:id="@+id/miles_total"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:elevation="2dp"
-                        android:gravity="center_horizontal"
                         android:textSize="20sp"
                         android:textColor="@color/black" />
                 </LinearLayout>
@@ -124,14 +121,6 @@
                     android:layout_weight="0.0"
                     android:orientation="vertical">
                     <TextView
-                        android:id="@+id/num_workouts_title"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:text="@string/total_workouts"
-                        android:textSize="20sp"
-                        android:textColor="@color/black"
-                        android:elevation="2dp" />
-                    <TextView
                         android:id="@+id/num_workouts"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -139,24 +128,24 @@
                         android:gravity="center_horizontal"
                         android:textSize="20sp"
                         android:textColor="@color/black" />
+                    <TextView
+                        android:id="@+id/num_workouts_title"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="@string/total_workouts"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
+                        android:elevation="2dp" />
                 </LinearLayout>
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="125dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.0"
                     android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/best_pace_title"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:text="@string/best_pace"
-                        android:textSize="20sp"
-                        android:textColor="@color/black"
-                        android:elevation="2dp" />
                     <TextView
                         android:id="@+id/best_pace"
                         android:layout_width="match_parent"
@@ -165,6 +154,15 @@
                         android:gravity="center_horizontal"
                         android:textSize="20sp"
                         android:textColor="@color/black" />
+                    <TextView
+                        android:id="@+id/best_pace_title"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:text="@string/best_pace"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
+                        android:gravity="center_horizontal"
+                        android:elevation="2dp" />
                 </LinearLayout>
                 <Space
                     android:layout_width="0dp"

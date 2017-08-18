@@ -1,6 +1,6 @@
 package com.android.seth.runningapp.listview;
 
-import com.android.seth.runningapp.Workout;
+import com.android.seth.runningapp.util.Workout;
 
 public class PastWorkout {
     private String toDisplay;

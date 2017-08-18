@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.seth.runningapp.util.UtilityFunctions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -30,7 +31,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class PastWorkoutActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -56,7 +56,7 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         int duration = intent.getIntExtra("WORKOUT_DURATION", 0);
         locations = intent.getParcelableArrayListExtra("WORKOUT_LOCATIONS");
         times = intent.getIntegerArrayListExtra("WORKOUT_TIMES");
-        String time = "Time: "  + getTime(duration);
+        String time = "Time: "  + UtilityFunctions.getTimeString(duration);
         timeStat.setText(time);
         distanceStat.setText("Distance: " + new DecimalFormat("#.##").format(distanceMiles) + " miles");
     }
@@ -280,41 +280,18 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
             }
             int duration_temp = times.get(times.size()-1);
             float pace = duration_temp / dist;
-            int pace_minutes = (int)pace/60;
-            int pace_seconds = (int)pace%60;
-            paceStat.setText(pace_minutes + new DecimalFormat(".##").format((float)pace_seconds/60) + " min/mile");
+            paceStat.setText(UtilityFunctions.getPaceString(pace));
         }
         int i = 1;
         for(Integer index : mile_markers){
-            int total_seconds = times.get(index);
-            String time = getTime(total_seconds);
+            int totalSeconds = times.get(index);
+            String time = UtilityFunctions.getTimeString(totalSeconds);
             mGoogleMap.addMarker(new MarkerOptions()
                         .position(locations.get(index))
                         .title("Mile " + i + " At " + time)
             );
             i++;
         }
-    }
-
-    /**
-     * Converts int number of seconds to an Hours:Minutes:Seconds format
-     *
-     * @param total_seconds total number of seconds
-     * @return String in correct time format
-     */
-    private String getTime(int total_seconds){
-        String to_return;
-        int total_minutes = total_seconds / 60;
-        int hours = total_minutes / 60;
-        int minutes = total_minutes % 60;
-        int seconds = total_seconds % 60;
-        if(hours == 0){
-            to_return = String.format(Locale.US, "%1$01d:%2$02d", minutes, seconds);
-        }
-        else{
-            to_return = String.format(Locale.US, "%1$01d:%2$02d:%3$02d", hours, minutes, seconds);
-        }
-        return to_return;
     }
 
     /**
