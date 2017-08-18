@@ -34,4 +34,9 @@
     <string name="drawer_open">Open the navigation drawer</string>
     <string name="drawer_close">Close the navigation drawer</string>
     <string name="delete_description">Delete button for past workouts</string>
+    <string name="launcher_description">Launcher logo</string>
+    <string name="total_workouts">Total Workouts</string>
+    <string name="best_pace">Best Pace</string>
+    <string name="total_miles">Total Miles</string>
+    <string name="miles_week">Weekly Miles</string>
 </resources>

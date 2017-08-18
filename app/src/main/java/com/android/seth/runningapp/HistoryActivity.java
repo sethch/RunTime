@@ -144,6 +144,4 @@ public class HistoryActivity extends AppCompatActivity{
 // TODO: Explore multi-threading
 // TODO: improve listview_history appearance
 // TODO: use runkeeper android listview_history for inspiration
-// TODO: Instead of date use time from present
-// TODO: ensure toolbar does not cover any listview_history items
 // TODO: Convert up button to nav drawer to make app layout horizontal instead of vertical

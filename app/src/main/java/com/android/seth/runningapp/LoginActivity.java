@@ -44,4 +44,3 @@ public class LoginActivity extends AppCompatActivity{
 }
 
 // TODO: Improve Login Screen Logo
-// TODO: Potentially remove app bar, add progress dialog

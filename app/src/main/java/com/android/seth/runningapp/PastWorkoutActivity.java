@@ -298,6 +298,7 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
 
     /**
      * Converts int number of seconds to an Hours:Minutes:Seconds format
+     *
      * @param total_seconds total number of seconds
      * @return String in correct time format
      */
@@ -314,6 +315,16 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
             to_return = String.format(Locale.US, "%1$01d:%2$02d:%3$02d", hours, minutes, seconds);
         }
         return to_return;
+    }
+
+    /**
+     * Returns to HistoryActivity upon pressing back.
+     */
+    @Override
+    public void onBackPressed(){
+        Intent HistoryActivity = new Intent(PastWorkoutActivity.this, HistoryActivity.class);
+        startActivity(HistoryActivity);
+        finish();
     }
 }
 

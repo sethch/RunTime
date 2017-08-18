@@ -32,8 +32,9 @@ public class ProfileActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseUser user;
     private TextView milesWeekTextView;
-    private TextView milesAllTimeTextView;
+    private TextView milesTotalTextView;
     private TextView numWorkoutsTextView;
+    private TextView bestPaceTextView;
 
     final float[] milesWeek = new float[1];
     final float[] milesAllTime = new float[1];
@@ -46,8 +47,9 @@ public class ProfileActivity extends AppCompatActivity {
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer);
         ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
         milesWeekTextView = (TextView) findViewById(R.id.miles_week);
-        milesAllTimeTextView = (TextView) findViewById(R.id.miles_all_time);
+        milesTotalTextView = (TextView) findViewById(R.id.miles_total);
         numWorkoutsTextView = (TextView) findViewById(R.id.num_workouts);
+        bestPaceTextView = (TextView) findViewById(R.id.best_pace);
         mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions));
         setListViewOnitemClick(mDrawerList);
         actionBar = getSupportActionBar();
@@ -148,6 +150,9 @@ public class ProfileActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Sets TextViews for main content by querying FireBase.
+     */
     public void setStats(){
         final long currentDate = System.currentTimeMillis();
         final long oneWeekAgo = currentDate - (1000*60*60*24*7);
@@ -182,13 +187,18 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Called from onDataChange for retrieving user info for TextViews.
+     */
     private void setTextViews() {
-        milesWeekTextView.setText("This Week\n" + String.format(Locale.US, "%.1f", milesWeek[0]) + " miles");
-        milesAllTimeTextView.setText("All Time\n" + String.format(Locale.US, "%.1f", milesAllTime[0]) + " miles");
-        numWorkoutsTextView.setText("Number of Workouts\n" + Integer.valueOf(numWorkouts[0]));
+        milesWeekTextView.setText(String.format(Locale.US, "%.1f", milesWeek[0]));
+        milesTotalTextView.setText(String.format(Locale.US, "%.1f", milesAllTime[0]));
+        String numWorkoutsString = String.valueOf(numWorkouts[0]);
+        numWorkoutsTextView.setText(numWorkoutsString);
+        // TODO: bestPaceTextView.setText("put something here");
     }
 }
 
-// TODO: Add text to pace TextViews
+// TODO: Add Best Pace to bestPaceTextView
 // TODO: Improve looks of Nav Drawer
 // TODO: Improve looks of main content
