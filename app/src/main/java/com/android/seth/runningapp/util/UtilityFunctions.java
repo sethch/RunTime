@@ -14,9 +14,9 @@ public final class UtilityFunctions {
      * @return Formatted string representing pace in min/mile.
      */
     public static String getPaceString(float pace) {
-        int pace_minutes = (int) pace / 60;
-        int pace_seconds = (int) pace % 60;
-        return pace_minutes + new DecimalFormat(".##").format((float) pace_seconds / 60) + " min/mi";
+        int paceMinutes = (int) pace / 60;
+        int paceSeconds = (int) pace % 60;
+        return paceMinutes + new DecimalFormat(".##").format((float) paceSeconds / 60) + " min/mi";
     }
 
     /**
@@ -27,9 +27,9 @@ public final class UtilityFunctions {
      */
     public static String getTimeString(int totalSeconds) {
         String toReturn;
-        int total_minutes = totalSeconds / 60;
-        int hours = total_minutes / 60;
-        int minutes = total_minutes % 60;
+        int totalMinutes = totalSeconds / 60;
+        int hours = totalMinutes / 60;
+        int minutes = totalMinutes % 60;
         int seconds = totalSeconds % 60;
         if (hours == 0) {
             toReturn = "Time: " + String.format(Locale.US, "%1$01d:%2$02d", minutes, seconds);
@@ -46,9 +46,9 @@ public final class UtilityFunctions {
      * @return  String in "x.xx miles" format.
      */
     public static String getDistanceString(float distance){
-        int whole_number = (int) Math.floor(distance);
-        int first_two_decimals = (int) Math.floor((distance - whole_number) * 100);
-        return whole_number + "." + String.format(Locale.US, "%02d", first_two_decimals) + " miles";
+        int wholeNumber = (int) Math.floor(distance);
+        int firstTwoDecimals = (int) Math.floor((distance - wholeNumber) * 100);
+        return wholeNumber + "." + String.format(Locale.US, "%02d", firstTwoDecimals) + " miles";
     }
 
     /**
@@ -61,5 +61,28 @@ public final class UtilityFunctions {
         Date date = new Date(timeInMilliseconds);
         SimpleDateFormat format = new SimpleDateFormat("mm-dd-yyyy hh:mm a", Locale.US);
         return format.format(date);
+    }
+
+    /**
+     * Reports current workout status as a String for TextToSpeech.
+     *
+     * @param pace  Current pace in sec/mile.
+     * @param distanceTraveledMiles     Distance traveled in miles.
+     * @param minutes   Minutes elapsed.
+     * @param seconds   Seconds elapsed.
+     * @return  Workout status.
+     */
+    public static String getWorkoutStatusString(float pace, float distanceTraveledMiles, int minutes, int seconds){
+        int paceSeconds;
+        int paceMinutes;
+        if (distanceTraveledMiles > 0.1){
+            paceSeconds = (int) pace % 60;
+            paceMinutes = (int) pace / 60;
+        }
+        else{
+            paceSeconds = 0;
+            paceMinutes = 0;
+        }
+        return "Time: " + minutes + " minutes, " + seconds + " seconds. Distance: " + getDistanceString(distanceTraveledMiles) + ". Pace: " + paceMinutes + "minutes " + paceSeconds + " seconds per mile";
     }
 }

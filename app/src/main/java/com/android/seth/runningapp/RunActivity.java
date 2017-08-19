@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.SystemClock;
 import android.provider.Settings;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -48,9 +49,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import android.os.Handler;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class RunActivity extends AppCompatActivity implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener, TextToSpeech.OnInitListener {
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
@@ -58,6 +60,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
 
+    private TextToSpeech textToSpeech;
     // TIMER SECTION
     private TextView timerTextView;
     private TextView distanceTextView;
@@ -76,9 +79,11 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private float distanceTraveledMeters = 0;
     private float distanceTraveledMiles = 0;
+    private float currentMile = 1;
 
     private boolean begin = true;
     private boolean paused = true;
+    private boolean started = false;
 
     /**
      * Checks if google play services available.
@@ -97,6 +102,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         finishButton = (Button) findViewById(R.id.finish_button);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
+        textToSpeech = new TextToSpeech(this, this);
         handler = new Handler();
         checkGPSandNetwork();
         checkLocationPermission();
@@ -149,6 +155,12 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             if (mLastLocation != null) {
                 distanceTraveledMeters = distanceTraveledMeters + location.distanceTo(mLastLocation);
                 distanceTraveledMiles = distanceTraveledMeters / 1609.34f;
+                if(distanceTraveledMiles > currentMile){
+                    float paceSecondsTotal = (seconds + (minutes * 60)) / distanceTraveledMiles;
+                    CharSequence finishedWorkoutString = currentMile + "miles complete. " + UtilityFunctions.getWorkoutStatusString(paceSecondsTotal, distanceTraveledMiles, minutes, seconds);
+                    textToSpeech.speak(finishedWorkoutString, TextToSpeech.QUEUE_FLUSH, null, "Workout Finished");
+                    currentMile += 1;
+                }
             }
             mLastLocation = location;
             lastLocation = currLocation;
@@ -171,13 +183,22 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onClick(View v) {
         if (v == resumePauseButton) {
             int status = (int) v.getTag();
+            // Workout was not paused.
             if (status == 1) {
+                // Workout was not started.
+                if(!started){
+                    CharSequence finishedWorkoutString = "Workout Started";
+                    textToSpeech.speak(finishedWorkoutString, TextToSpeech.QUEUE_FLUSH, null, "Workout Started");
+                    started = true;
+                }
                 startTime = SystemClock.uptimeMillis();
                 handler.postDelayed(runnable, 0);
                 resumePauseButton.setText(getString(R.string.pause));
                 v.setTag(0);
                 paused = false;
-            } else {
+            }
+            // Workout was paused.
+            else {
                 timeBuff += millisecondTime;
                 handler.removeCallbacks(runnable);
                 resumePauseButton.setText(getString(R.string.resume));
@@ -185,6 +206,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
                 paused = true;
             }
         }
+        //  Workout finished.
         if (v == finishButton) {
             handler.removeCallbacks(runnable);
             storeWorkout();
@@ -195,6 +217,12 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      * Stores arrayList of locations and times to firebase database when user presses "finish" button.
      */
     private void storeWorkout() {
+        float paceSecondsTotal = (seconds + (minutes * 60)) / distanceTraveledMiles;
+        CharSequence finishedWorkoutString = "Workout Finished. " + UtilityFunctions.getWorkoutStatusString(paceSecondsTotal, distanceTraveledMiles, minutes, seconds);
+        textToSpeech.speak(finishedWorkoutString, TextToSpeech.QUEUE_FLUSH, null, "Workout Finished");
+        while(textToSpeech.isSpeaking()){
+            // Waiting...
+        }
         ArrayList<Lat_Lng> temp_locations = new ArrayList<>();
         for(LatLng l : locations){
             temp_locations.add(new Lat_Lng(l.latitude, l.longitude));
@@ -421,6 +449,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         outState.putFloat("METERS", distanceTraveledMeters);
         outState.putBoolean("BEGIN", begin);
         outState.putBoolean("PAUSED", paused);
+        outState.putBoolean("STARTED", started);
         outState.putIntegerArrayList("TIMES", times);
         outState.putParcelableArrayList("LOCATIONS", locations);
         outState.putLong("TIMEBUFF", timeBuff);
@@ -441,6 +470,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         distanceTraveledMeters = savedInstanceState.getFloat("METERS");
         begin = savedInstanceState.getBoolean("BEGIN");
         paused = savedInstanceState.getBoolean("PAUSED");
+        started = savedInstanceState.getBoolean("STARTED");
         locations = savedInstanceState.getParcelableArrayList("LOCATIONS");
         times = savedInstanceState.getIntegerArrayList("TIMES");
         currLocation = savedInstanceState.getParcelable("CURR_LOC");
@@ -562,8 +592,23 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         startActivity(historyActivity);
         finish();
     }
+
+    @Override
+    public void onInit(int status) {
+        if(status == TextToSpeech.SUCCESS){
+            int result = textToSpeech.setLanguage(Locale.US);
+
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "Language is not supported");
+            }
+        }
+    }
 }
 
 // TODO: Improve AlertDialog appearance in onBackPressed() and checkGPSandNetwork()
 // TODO: Potentially check whether user enabled location tracking in checkGPSandNetwork()
 // TODO: Potentially fix onDataChange function to not duplicate elements when new workout is stored
+
+// TODO: Automated audio for each mile mark, activity start and activity end (TextToSpeech)
+// TODO: Volume controls
