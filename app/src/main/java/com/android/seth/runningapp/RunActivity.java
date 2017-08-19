@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.SystemClock;
 import android.provider.Settings;
@@ -95,6 +96,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         timerTextView = (TextView) findViewById(R.id.timer);
         distanceTextView = (TextView) findViewById(R.id.distance);
         paceTextView = (TextView) findViewById(R.id.pace);
@@ -191,6 +193,10 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
                     textToSpeech.speak(finishedWorkoutString, TextToSpeech.QUEUE_FLUSH, null, "Workout Started");
                     started = true;
                 }
+                else{
+                    CharSequence finishedWorkoutString = "Workout Resumed";
+                    textToSpeech.speak(finishedWorkoutString, TextToSpeech.QUEUE_FLUSH, null, "Workout Resumed");
+                }
                 startTime = SystemClock.uptimeMillis();
                 handler.postDelayed(runnable, 0);
                 resumePauseButton.setText(getString(R.string.pause));
@@ -199,6 +205,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             }
             // Workout was paused.
             else {
+                CharSequence finishedWorkoutString = "Workout Paused";
+                textToSpeech.speak(finishedWorkoutString, TextToSpeech.QUEUE_FLUSH, null, "Workout Paused");
                 timeBuff += millisecondTime;
                 handler.removeCallbacks(runnable);
                 resumePauseButton.setText(getString(R.string.resume));
@@ -593,6 +601,11 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         finish();
     }
 
+    /**
+     * Initializes TextToSpeech once it is ready.
+     *
+     * @param status
+     */
     @Override
     public void onInit(int status) {
         if(status == TextToSpeech.SUCCESS){
@@ -610,5 +623,4 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 // TODO: Potentially check whether user enabled location tracking in checkGPSandNetwork()
 // TODO: Potentially fix onDataChange function to not duplicate elements when new workout is stored
 
-// TODO: Automated audio for each mile mark, activity start and activity end (TextToSpeech)
 // TODO: Volume controls
