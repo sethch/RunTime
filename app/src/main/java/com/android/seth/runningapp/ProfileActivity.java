@@ -208,11 +208,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 }
 
-// TODO: Add Best Pace to bestPaceTextView
 // TODO: Improve looks of Nav Drawer
 // TODO: Improve looks of main content
-// TODO: Clean up and potentially comment activity_profile xml
-// TODO: Find redundant functions and add to UtilityFunctions or other Util classes
 
-// TODO: Fix resume/pause button
-// TODO: Fix RunActivity distance tracking
+// TODO: Test RunActivity SavedInstanceState with distance

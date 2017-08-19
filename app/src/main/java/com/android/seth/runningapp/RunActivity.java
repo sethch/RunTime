@@ -79,7 +79,6 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private boolean begin = true;
     private boolean paused = true;
-    private boolean workoutStarted = false;
 
     /**
      * Checks if google play services available.
@@ -104,10 +103,10 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         if(savedInstanceState != null){
             restoreVariables(savedInstanceState);
         }
-        else{
+        else if(begin){
+            resumePauseButton.setTag(1);
             locations = new ArrayList<>();
             times = new ArrayList<>();
-            resumePauseButton.setTag(1);
             resumePauseButton.setText(getString(R.string.start));
         }
         if (googleServicesAvailable()) {
@@ -178,7 +177,6 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
                 resumePauseButton.setText(getString(R.string.pause));
                 v.setTag(0);
                 paused = false;
-                workoutStarted = true;
             } else {
                 timeBuff += millisecondTime;
                 handler.removeCallbacks(runnable);
@@ -220,7 +218,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         int totalSeconds = (int) (UpdateTime / 1000);
         minutes = seconds / 60;
         seconds = totalSeconds % 60;
-        String timeString = "Time: " + UtilityFunctions.getTimeString(totalSeconds);
+        String timeString = UtilityFunctions.getTimeString(totalSeconds);
         timerTextView.setText(timeString);
         distanceTextView.setText(UtilityFunctions.getDistanceString(distanceTraveledMiles));
         if(distanceTraveledMiles > 0) {
@@ -305,14 +303,10 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
 
                 } else {
-
                     // Permission denied, Disable the functionality that depends on this permission.
                     Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
                 }
             }
-
-            // other 'case' lines to check for other permissions this app might request.
-            //You can add here other case statements according to your requirement.
         }
     }
 
@@ -404,8 +398,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(4000); // Location update interval set to 2000 ms (2 seconds)
-        mLocationRequest.setFastestInterval(2000); // TODO: fine tune & test
+        mLocationRequest.setInterval(1000); // Location update interval set to 2000 ms (2 seconds)
+        mLocationRequest.setFastestInterval(500); // TODO: fine tune & test
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setSmallestDisplacement(20); // TODO: fine tune & test
         if (ContextCompat.checkSelfPermission(this,
@@ -416,7 +410,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     /**
-     * Called when screen orientation is changed to save variables
+     * Called when screen orientation is changed to save variables.
      *
      * @param outState Instance state to save
      */
@@ -439,7 +433,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     /**
      * Called when the screen orientation is changed while the app is running.
      *
-     * @param savedInstanceState instance state pararmeter from onCreate
+     * @param savedInstanceState instance state parameter from onCreate
      */
     private void restoreVariables(Bundle savedInstanceState){
         resumePauseButton.setTag(savedInstanceState.getInt("TAG"));
@@ -510,7 +504,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
                 startHistoryActivity();
             }
         });
-        if(workoutStarted) {
+        if(!begin) {
             AlertDialog dialog = builder.create();
             dialog.show();
         }

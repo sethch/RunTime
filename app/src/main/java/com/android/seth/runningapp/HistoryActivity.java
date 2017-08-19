@@ -96,6 +96,7 @@ public class HistoryActivity extends AppCompatActivity{
             databaseReference.child("users").child(user.getUid()).child("workouts").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    adapter.clear();
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         Workout workout = ds.getValue(Workout.class);
                         if(workout != null) {
@@ -105,7 +106,7 @@ public class HistoryActivity extends AppCompatActivity{
                             long workoutDateInMilliseconds = workout.getDate();
                             String formattedDate = UtilityFunctions.getDateString(workoutDateInMilliseconds);
                             String formattedDistance = UtilityFunctions.getDistanceString(distanceMiles);
-                            String combined = " " + formattedDistance + " Time: " + formattedTimeString + "\n " + formattedDate;
+                            String combined = " " + formattedDistance + " " + formattedTimeString + "\n " + formattedDate;
                             PastWorkout pastWorkout = new PastWorkout(combined, workout, ds.getKey());
                             adapter.add(pastWorkout);
                         }
@@ -122,7 +123,7 @@ public class HistoryActivity extends AppCompatActivity{
     }
 }
 
-// TODO: Explore multi-threading
+// TODO: Explore multi-threading (maybe RxJava)
 // TODO: improve listview_history appearance
 // TODO: use runkeeper android listview_history for inspiration
 // TODO: Convert up button to nav drawer to make app layout horizontal instead of vertical

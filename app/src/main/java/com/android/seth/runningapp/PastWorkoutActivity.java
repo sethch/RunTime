@@ -25,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -253,12 +254,24 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
     }
 
     /**
-     * Calculates and places mile markers for the workout
-     * Also sets pace text by calculating pace
+     * Calculates and places mile markers for the workout.
+     * Also sets pace text by calculating pace.
      */
     private void placeMarkers(){
         ArrayList<Integer> mile_markers = new ArrayList<>();
+        Location start = new Location(LocationManager.GPS_PROVIDER);
+        Location end = new Location(LocationManager.GPS_PROVIDER);
         if(locations != null) {
+            mGoogleMap.addMarker(new MarkerOptions()
+                    .position(locations.get(0))
+                    .title("Start")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+            );
+            mGoogleMap.addMarker(new MarkerOptions()
+                    .position(locations.get(locations.size()-1))
+                    .title("End")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+            );
             int i = 0;
             float dist = 0f;
             float prevDist;
@@ -280,7 +293,9 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
             }
             int duration_temp = times.get(times.size()-1);
             float pace = duration_temp / dist;
-            paceStat.setText(UtilityFunctions.getPaceString(pace));
+            if(dist > 0) {
+                paceStat.setText(UtilityFunctions.getPaceString(pace));
+            }
         }
         int i = 1;
         for(Integer index : mile_markers){

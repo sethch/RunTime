@@ -32,9 +32,9 @@ public final class UtilityFunctions {
         int minutes = total_minutes % 60;
         int seconds = totalSeconds % 60;
         if (hours == 0) {
-            toReturn = String.format(Locale.US, "%1$01d:%2$02d", minutes, seconds);
+            toReturn = "Time: " + String.format(Locale.US, "%1$01d:%2$02d", minutes, seconds);
         } else {
-            toReturn = String.format(Locale.US, "%1$01d:%2$02d:%3$02d", hours, minutes, seconds);
+            toReturn = "Time: " + String.format(Locale.US, "%1$01d:%2$02d:%3$02d", hours, minutes, seconds);
         }
         return toReturn;
     }
