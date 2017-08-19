@@ -62,6 +62,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     private FirebaseAuth firebaseAuth;
 
     private TextToSpeech textToSpeech;
+
     // TIMER SECTION
     private TextView timerTextView;
     private TextView distanceTextView;
@@ -264,7 +265,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     /**
-     * Runnable is an interface implemented by classes which are executed by a thread.
+     * Starts a thread keeping track of time while workout is ongoing.
      */
     public Runnable runnable = new Runnable() {
         public void run() {

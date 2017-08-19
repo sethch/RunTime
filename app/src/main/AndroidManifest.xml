@@ -31,21 +31,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         android:debuggable="true"
-        <activity android:name=".ProfileActivity"/>
+        <activity
+            android:name=".ProfileActivity"
+            android:label="@string/title_activity_profile"/>
         <activity
             android:name=".RunActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".HistoryActivity"
-            android:parentActivityName=".ProfileActivity"/>
+            android:label="@string/title_activity_history"
+            android:parentActivityName=".ProfileActivity" />
         <activity
             android:name=".PastWorkoutActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".ProfileActivity"/>
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -53,6 +61,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/api_key" />
+
     </application>
 
 </manifest>

@@ -2,6 +2,7 @@ package com.android.seth.runningapp;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.media.audiofx.BassBoost;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -54,7 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
         numWorkoutsTextView = (TextView) findViewById(R.id.num_workouts);
         bestPaceTextView = (TextView) findViewById(R.id.best_pace);
         mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions));
-        setListViewOnitemClick(mDrawerList);
+        setListViewOnItemClick(mDrawerList);
         actionBar = getSupportActionBar();
         FirebaseDatabase instance = FirebaseDatabase.getInstance();
         databaseReference = instance.getReference();
@@ -70,19 +71,16 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                actionBar.setTitle("Profile");
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                actionBar.setTitle("Profile");
             }
         };
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setTitle("Profile");
         setStats();
     }
 
@@ -114,7 +112,7 @@ public class ProfileActivity extends AppCompatActivity {
      *
      * @param mDrawerList   navigation drawer listview to set listener for
      */
-    private void setListViewOnitemClick(ListView mDrawerList) {
+    private void setListViewOnItemClick(ListView mDrawerList) {
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -127,7 +125,8 @@ public class ProfileActivity extends AppCompatActivity {
                         activityToStart = new Intent(ProfileActivity.this, HistoryActivity.class);
                         break;
                     case 2:
-                        return;
+                        activityToStart = new Intent(ProfileActivity.this, SettingsActivity.class);
+                        break;
                 }
                 if(activityToStart != null) {
                     ProfileActivity.this.startActivity(activityToStart);
