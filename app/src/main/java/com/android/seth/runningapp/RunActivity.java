@@ -253,7 +253,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     public void setTimerAndDistance(){
         float UpdateTime = timeBuff + millisecondTime;
         int totalSeconds = (int) (UpdateTime / 1000);
-        minutes = seconds / 60;
+        minutes = totalSeconds / 60;
         seconds = totalSeconds % 60;
         String timeString = UtilityFunctions.getTimeString(totalSeconds);
         timerTextView.setText(timeString);
@@ -625,3 +625,4 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 // TODO: Potentially fix onDataChange function to not duplicate elements when new workout is stored
 
 // TODO: Volume controls
+// TODO: Potentially use alarm clock activity rather than mimic functionality.

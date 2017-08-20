@@ -210,4 +210,4 @@ public class ProfileActivity extends AppCompatActivity {
 // TODO: Improve looks of Nav Drawer
 // TODO: Improve looks of main content
 
-// TODO: Test RunActivity SavedInstanceState with distance
+// TODO: Async load history activity from service
