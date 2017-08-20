@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -12,6 +13,7 @@ import android.location.LocationManager;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
@@ -61,6 +63,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
 
+    private SharedPreferences sharedPreferences;
+
     private TextToSpeech textToSpeech;
 
     // TIMER SECTION
@@ -86,6 +90,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     private boolean begin = true;
     private boolean paused = true;
     private boolean started = false;
+    private boolean audioEnabled;
 
     /**
      * Checks if google play services available.
@@ -96,17 +101,12 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_run);
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        timerTextView = (TextView) findViewById(R.id.timer);
-        distanceTextView = (TextView) findViewById(R.id.distance);
-        paceTextView = (TextView) findViewById(R.id.pace);
-        resumePauseButton = (Button) findViewById(R.id.start_button);
-        finishButton = (Button) findViewById(R.id.finish_button);
+        initializeLayout();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
-        textToSpeech = new TextToSpeech(this, this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         handler = new Handler();
+        setUpTextToSpeech();
         checkGPSandNetwork();
         checkLocationPermission();
         if (savedInstanceState != null) {
@@ -131,6 +131,27 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(5);
         }
+    }
+
+    /**
+     * Initializes layout and views needed for RunActivity.
+     */
+    private void initializeLayout() {
+        setContentView(R.layout.activity_run);
+        timerTextView = (TextView) findViewById(R.id.timer);
+        distanceTextView = (TextView) findViewById(R.id.distance);
+        paceTextView = (TextView) findViewById(R.id.pace);
+        resumePauseButton = (Button) findViewById(R.id.start_button);
+        finishButton = (Button) findViewById(R.id.finish_button);
+    }
+
+    /**
+     * Sets up TextToSpeech and determined whether volume should be enabled from settings.
+     */
+    private void setUpTextToSpeech() {
+        textToSpeech = new TextToSpeech(this, this);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        audioEnabled = sharedPreferences.getBoolean("pref_audio_enabled", true);
     }
 
     /**
@@ -159,8 +180,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
                 distanceTraveledMiles = distanceTraveledMeters / 1609.34f;
                 if (distanceTraveledMiles > currentMile) {
                     float paceSecondsTotal = (seconds + (minutes * 60)) / distanceTraveledMiles;
-                    CharSequence finishedWorkoutString = currentMile + "miles complete. " + UtilityFunctions.getWorkoutStatusString(paceSecondsTotal, distanceTraveledMiles, minutes, seconds);
-                    textToSpeech.speak(finishedWorkoutString, TextToSpeech.QUEUE_FLUSH, null, "Workout Finished");
+                    CharSequence mileMarkWorkoutString = currentMile + "miles complete. " + UtilityFunctions.getWorkoutStatusString(paceSecondsTotal, distanceTraveledMiles, minutes, seconds);
+                    speakIfEnabled(mileMarkWorkoutString, "Mile Mark");
                     currentMile += 1;
                 }
             }
@@ -189,12 +210,12 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             if (status == 1) {
                 // Workout was not started.
                 if (!started) {
-                    CharSequence finishedWorkoutString = "Workout Started";
-                    textToSpeech.speak(finishedWorkoutString, TextToSpeech.QUEUE_FLUSH, null, "Workout Started");
+                    CharSequence startedWorkoutString = "Workout Started";
+                    speakIfEnabled(startedWorkoutString, "Workout Started");
                     started = true;
                 } else {
-                    CharSequence finishedWorkoutString = "Workout Resumed";
-                    textToSpeech.speak(finishedWorkoutString, TextToSpeech.QUEUE_FLUSH, null, "Workout Resumed");
+                    CharSequence resumedWorkoutString = "Workout Resumed";
+                    speakIfEnabled(resumedWorkoutString, "Workout Resumed");
                 }
                 startTime = SystemClock.uptimeMillis();
                 handler.postDelayed(runnable, 0);
@@ -204,8 +225,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             }
             // Workout was paused.
             else {
-                CharSequence finishedWorkoutString = "Workout Paused";
-                textToSpeech.speak(finishedWorkoutString, TextToSpeech.QUEUE_FLUSH, null, "Workout Paused");
+                CharSequence pausedWorkoutString = "Workout Paused";
+                speakIfEnabled(pausedWorkoutString, "Workout Paused");
                 timeBuff += millisecondTime;
                 handler.removeCallbacks(runnable);
                 resumePauseButton.setText(getString(R.string.resume));
@@ -226,7 +247,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     private void storeWorkout() {
         float paceSecondsTotal = (seconds + (minutes * 60)) / distanceTraveledMiles;
         CharSequence finishedWorkoutString = "Workout Finished. " + UtilityFunctions.getWorkoutStatusString(paceSecondsTotal, distanceTraveledMiles, minutes, seconds);
-        textToSpeech.speak(finishedWorkoutString, TextToSpeech.QUEUE_FLUSH, null, "Workout Finished");
+        speakIfEnabled(finishedWorkoutString, "Workout Finished");
         while (textToSpeech.isSpeaking()) {
             // Waiting...
         }
@@ -611,6 +632,18 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
                     || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 Log.e("TTS", "Language is not supported");
             }
+        }
+    }
+
+    /**
+     * Checks if audio is enabled before reading the input CharSequence from TextToSpeech.
+     *
+     * @param stringToSpeak String for TextToSpeech to read.
+     * @param tag           Tag for CharSequence.
+     */
+    private void speakIfEnabled(CharSequence stringToSpeak, String tag) {
+        if (audioEnabled) {
+            textToSpeech.speak(stringToSpeak, TextToSpeech.QUEUE_FLUSH, null, tag);
         }
     }
 }

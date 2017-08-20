@@ -38,21 +38,21 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
 
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
-    private TextView paceStat;
     private ArrayList<LatLng> locations;
     private ArrayList<Integer> times;
+
+    private TextView distanceStat;
+    private TextView paceStat;
+    private TextView timeStat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_past_workout);
+        initializeLayout();
         if (googleServicesAvailable()) {
             initMap();
         }
         Intent intent = getIntent();
-        TextView timeStat = (TextView) findViewById(R.id.time_stat);
-        paceStat = (TextView) findViewById(R.id.pace_stat);
-        TextView distanceStat = (TextView) findViewById(R.id.distance_stat);
         float distanceMiles = intent.getFloatExtra("WORKOUT_DISTANCE", 0f);
         int duration = intent.getIntExtra("WORKOUT_DURATION", 0);
         locations = intent.getParcelableArrayListExtra("WORKOUT_LOCATIONS");
@@ -60,6 +60,16 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         String time = "Time: " + UtilityFunctions.getTimeString(duration);
         timeStat.setText(time);
         distanceStat.setText("Distance: " + new DecimalFormat("#.##").format(distanceMiles) + " miles");
+    }
+
+    /**
+     * Initializes layout and views for PastWorkoutActivity.
+     */
+    private void initializeLayout() {
+        setContentView(R.layout.activity_past_workout);
+        timeStat = (TextView) findViewById(R.id.time_stat);
+        paceStat = (TextView) findViewById(R.id.pace_stat);
+        distanceStat = (TextView) findViewById(R.id.distance_stat);
     }
 
 

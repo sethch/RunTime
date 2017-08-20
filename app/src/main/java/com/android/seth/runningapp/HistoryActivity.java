@@ -32,6 +32,7 @@ public class HistoryActivity extends AppCompatActivity {
     private PastWorkoutAdapter adapter;
     private DatabaseReference databaseReference;
     private FirebaseUser user;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,18 +41,25 @@ public class HistoryActivity extends AppCompatActivity {
         databaseReference = instance.getReference();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-        setContentView(R.layout.activity_history);
+        initializeLayout();
         progressDialog = new ProgressDialog(this);
-        ListView listView = (ListView) findViewById(R.id.history_listView);
         setListViewOnClick(listView);
         pastWorkoutList = new ArrayList<>();
         adapter = new PastWorkoutAdapter(this, pastWorkoutList);
-        listView.setAdapter(adapter);
-        populateListView();
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        listView.setAdapter(adapter);
+        populateListView();
+    }
+
+    /**
+     * Initializes layout and views for HistoryActivity.
+     */
+    private void initializeLayout() {
+        setContentView(R.layout.activity_history);
+        listView = (ListView) findViewById(R.id.history_listView);
     }
 
     /**

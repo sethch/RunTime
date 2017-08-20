@@ -2,7 +2,6 @@ package com.android.seth.runningapp;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.media.audiofx.BassBoost;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -29,11 +28,15 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Locale;
 
 public class ProfileActivity extends AppCompatActivity {
+    private DatabaseReference databaseReference;
+    private FirebaseUser user;
+
     private String[] drawerOptions = {"Begin", "History", "Settings"};
     private ActionBarDrawerToggle mDrawerToggle;
     private ActionBar actionBar;
-    private DatabaseReference databaseReference;
-    private FirebaseUser user;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+
     private TextView milesWeekTextView;
     private TextView milesTotalTextView;
     private TextView numWorkoutsTextView;
@@ -47,13 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer);
-        ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        milesWeekTextView = (TextView) findViewById(R.id.miles_week);
-        milesTotalTextView = (TextView) findViewById(R.id.miles_total);
-        numWorkoutsTextView = (TextView) findViewById(R.id.num_workouts);
-        bestPaceTextView = (TextView) findViewById(R.id.best_pace);
+        initializeLayout();
         mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions));
         setListViewOnItemClick(mDrawerList);
         actionBar = getSupportActionBar();
@@ -82,6 +79,19 @@ public class ProfileActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         setStats();
+    }
+
+    /**
+     * Initializes layout and views needed for ProfileActivity.
+     */
+    private void initializeLayout() {
+        setContentView(R.layout.activity_profile);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        milesWeekTextView = (TextView) findViewById(R.id.miles_week);
+        milesTotalTextView = (TextView) findViewById(R.id.miles_total);
+        numWorkoutsTextView = (TextView) findViewById(R.id.num_workouts);
+        bestPaceTextView = (TextView) findViewById(R.id.best_pace);
     }
 
     /**
