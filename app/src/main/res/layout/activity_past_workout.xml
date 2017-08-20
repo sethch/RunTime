@@ -7,43 +7,43 @@
     tools:context="com.android.seth.runningapp.PastWorkoutActivity">
 
     <fragment
+        android:id="@+id/past_workout_map"
+        android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/past_workout_map" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
-        android:text="@string/time_stat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/time_stat"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/pace_stat"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="@string/time_stat"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:text="@string/distance_stat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/distance_stat"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:text="@string/pace_stat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/pace_stat"
-        android:textSize="30sp"
-        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/distance_stat"
         android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/pace_stat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/distance_stat"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="@string/pace_stat"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

@@ -4,11 +4,11 @@ public class Lat_Lng {
     private double latitude;
     private double longitude;
 
-    public Lat_Lng(){
+    public Lat_Lng() {
 
     }
 
-    public Lat_Lng(double latitude, double longitude){
+    public Lat_Lng(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }

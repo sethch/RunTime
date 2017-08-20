@@ -8,12 +8,12 @@
         android:id="@+id/history_list_string"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        android:layout_toStartOf="@+id/delete_btn"
         android:layout_alignBottom="@+id/delete_btn"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/delete_btn"
+        android:textSize="17sp"
+        android:textStyle="bold" />
 
     <ImageButton
         android:id="@+id/delete_btn"

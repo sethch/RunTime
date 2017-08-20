@@ -42,10 +42,10 @@ public final class UtilityFunctions {
     /**
      * Converts float distance(miles) to a formatted string in format "x.xx miles".
      *
-     * @param distance  Distance in miles.
-     * @return  String in "x.xx miles" format.
+     * @param distance Distance in miles.
+     * @return String in "x.xx miles" format.
      */
-    public static String getDistanceString(float distance){
+    public static String getDistanceString(float distance) {
         int wholeNumber = (int) Math.floor(distance);
         int firstTwoDecimals = (int) Math.floor((distance - wholeNumber) * 100);
         return wholeNumber + "." + String.format(Locale.US, "%02d", firstTwoDecimals) + " miles";
@@ -54,10 +54,10 @@ public final class UtilityFunctions {
     /**
      * Converts a time in milliseconds to a formatted string in date format.
      *
-     * @param timeInMilliseconds    Time in milliseconds to convert to a date.
-     * @return  String in date format.
+     * @param timeInMilliseconds Time in milliseconds to convert to a date.
+     * @return String in date format.
      */
-    public static String getDateString(long timeInMilliseconds){
+    public static String getDateString(long timeInMilliseconds) {
         Date date = new Date(timeInMilliseconds);
         SimpleDateFormat format = new SimpleDateFormat("mm-dd-yyyy hh:mm a", Locale.US);
         return format.format(date);
@@ -66,20 +66,19 @@ public final class UtilityFunctions {
     /**
      * Reports current workout status as a String for TextToSpeech.
      *
-     * @param pace  Current pace in sec/mile.
-     * @param distanceTraveledMiles     Distance traveled in miles.
-     * @param minutes   Minutes elapsed.
-     * @param seconds   Seconds elapsed.
-     * @return  Workout status.
+     * @param pace                  Current pace in sec/mile.
+     * @param distanceTraveledMiles Distance traveled in miles.
+     * @param minutes               Minutes elapsed.
+     * @param seconds               Seconds elapsed.
+     * @return Workout status.
      */
-    public static String getWorkoutStatusString(float pace, float distanceTraveledMiles, int minutes, int seconds){
+    public static String getWorkoutStatusString(float pace, float distanceTraveledMiles, int minutes, int seconds) {
         int paceSeconds;
         int paceMinutes;
-        if (distanceTraveledMiles > 0.1){
+        if (distanceTraveledMiles > 0.1) {
             paceSeconds = (int) pace % 60;
             paceMinutes = (int) pace / 60;
-        }
-        else{
+        } else {
             paceSeconds = 0;
             paceMinutes = 0;
         }

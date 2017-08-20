@@ -1,27 +1,33 @@
 <resources>
+    <!-- General Strings -->
     <string name="app_name">RunTime</string>
-    <string name="settings">Settings</string>
-    <string name="begin">Begin</string>
-    <string name="statistics">Statistics</string>
     <string name="api_key" templateMergeStrategy="preserve" translatable="false">AIzaSyCiC-wRWe9Bd90SgO_LdbkDAnA0Vzq1jdY</string>
+    <string name="launcher_description">Launcher logo</string>
+
+    <!-- Strings related to LoginActivity -->
     <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to ProfileActivity -->
+
+        <!-- Navigation Drawer -->
+        <string name="drawer_open">Open the navigation drawer</string>
+        <string name="drawer_close">Close the navigation drawer</string>
+
+        <!-- Main Content -->
+        <string name="title_activity_profile">Profile</string>
+        <string name="total_miles">Total Miles</string>
+        <string name="miles_week">Weekly Miles</string>
+        <string name="total_workouts">Total Workouts</string>
+        <string name="best_pace">Best Pace</string>
+
+    <!-- Strings related to HistoryActivity -->
+    <string name="title_activity_history">History</string>
+    <string name="delete_description">Delete button for past workouts</string>
+
+    <!-- Strings related to RunActivity -->
     <string name="start">Start</string>
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
-    <string name="options">Options</string>
-
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
     <string name="resume_pause">Resume</string>
     <string name="begin_time">Time: 0:00</string>
     <string name="begin_distance">0.00 miles</string>
@@ -30,87 +36,16 @@
     <string name="pace_stat">0:00 min/mile</string>
     <string name="time_stat">Time: 0:00</string>
     <string name="distance_stat">Distance: 0.00 miles</string>
-    <string name="drawer_open">Open the navigation drawer</string>
-    <string name="drawer_close">Close the navigation drawer</string>
-    <string name="delete_description">Delete button for past workouts</string>
-    <string name="launcher_description">Launcher logo</string>
-    <string name="total_workouts">Total Workouts</string>
-    <string name="best_pace">Best Pace</string>
-    <string name="total_miles">Total Miles</string>
-    <string name="miles_week">Weekly Miles</string>
-    <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_history">History</string>
-    <string name="title_activity_profile">Profile</string>
 
     <!-- Strings related to Settings -->
+    <string name="title_activity_settings">Settings</string>
 
-    <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
+        <!-- General settings -->
+        <string name="pref_general_settings_title">General Settings</string>
+        <string name="pref_title_display_name">Display name</string>
 
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
+        <!-- Audio settings -->
+        <string name="pref_audio_settings_title">Audio Settings</string>
+        <string name="pref_audio_enabled">Audio enabled</string>
 
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
-
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
-
-    <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
-
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
-
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
-    </string-array>
-
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="multi_select_list_preference_default_value" />
-
-    <string name="pref_title_system_sync_settings">System sync settings</string>
-
-    <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
-
-    <string name="pref_title_new_message_notifications">New message notifications</string>
-
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
-
-    <string name="pref_title_vibrate">Vibrate</string>
 </resources>

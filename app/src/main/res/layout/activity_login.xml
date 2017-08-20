@@ -8,10 +8,10 @@
         android:id="@+id/app_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/runtime_logo"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
         android:layout_marginTop="151dp"
-        android:contentDescription="@string/launcher_description"/>
+        android:contentDescription="@string/launcher_description"
+        android:src="@drawable/runtime_logo" />
 </RelativeLayout>

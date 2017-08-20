@@ -45,7 +45,7 @@ public class ProfileActivity extends AppCompatActivity {
     private final float[] bestPace = new float[1];
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer);
@@ -87,7 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
     /**
      * Allows App Icon to change upon Navigation Drawer opening/closing.
      *
-     * @param savedInstanceState    Instance state of activity.
+     * @param savedInstanceState Instance state of activity.
      */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -99,7 +99,7 @@ public class ProfileActivity extends AppCompatActivity {
     /**
      * Handles activity changes such as orientation.
      *
-     * @param newConfig     new Activity configuration.
+     * @param newConfig new Activity configuration.
      */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -110,14 +110,14 @@ public class ProfileActivity extends AppCompatActivity {
     /**
      * Sets onClickListener for each ListView item in the Navigation Drawer.
      *
-     * @param mDrawerList   navigation drawer listview to set listener for
+     * @param mDrawerList navigation drawer listview to set listener for
      */
     private void setListViewOnItemClick(ListView mDrawerList) {
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent activityToStart = null;
-                switch(position){
+                switch (position) {
                     case 0:
                         activityToStart = new Intent(ProfileActivity.this, RunActivity.class);
                         break;
@@ -128,7 +128,7 @@ public class ProfileActivity extends AppCompatActivity {
                         activityToStart = new Intent(ProfileActivity.this, SettingsActivity.class);
                         break;
                 }
-                if(activityToStart != null) {
+                if (activityToStart != null) {
                     ProfileActivity.this.startActivity(activityToStart);
                 }
             }
@@ -138,8 +138,8 @@ public class ProfileActivity extends AppCompatActivity {
     /**
      * Handles opening Navigation Drawer with touching App Icon.
      *
-     * @param item  Selected MenuItem
-     * @return  superclass implementation
+     * @param item Selected MenuItem
+     * @return superclass implementation
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -155,9 +155,9 @@ public class ProfileActivity extends AppCompatActivity {
     /**
      * Sets TextViews for main content by querying FireBase.
      */
-    public void setStats(){
+    public void setStats() {
         final long currentDate = System.currentTimeMillis();
-        final long oneWeekAgo = currentDate - (1000*60*60*24*7);
+        final long oneWeekAgo = currentDate - (1000 * 60 * 60 * 24 * 7);
         bestPace[0] = 0f;
 
         Query query = databaseReference
@@ -168,19 +168,19 @@ public class ProfileActivity extends AppCompatActivity {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         Workout workout = ds.getValue(Workout.class);
                         numWorkouts[0]++;
                         long date = workout.getDate();
                         float miles = workout.getDistanceMiles();
                         milesAllTime[0] += miles;
-                        if(date >= oneWeekAgo){
+                        if (date >= oneWeekAgo) {
                             milesWeek[0] += miles;
                         }
                         int duration = workout.getDuration();
-                        float pace = duration/miles;
-                        if(pace > bestPace[0] && miles > 0.1){
+                        float pace = duration / miles;
+                        if (pace > bestPace[0] && miles > 0.1) {
                             bestPace[0] = pace;
                         }
                     }

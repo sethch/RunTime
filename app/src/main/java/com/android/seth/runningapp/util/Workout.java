@@ -11,11 +11,11 @@ public class Workout {
     private float distanceMiles;
     private int duration;
 
-    public Workout(){
+    public Workout() {
 
     }
 
-    public Workout(ArrayList<Lat_Lng> locations, ArrayList<Integer> times, long date, float distanceMiles, int duration){
+    public Workout(ArrayList<Lat_Lng> locations, ArrayList<Integer> times, long date, float distanceMiles, int duration) {
         this.locations = locations;
         this.times = times;
         this.date = date;
@@ -43,21 +43,23 @@ public class Workout {
         this.distanceMiles = distanceMiles;
     }
 
-    public long getDate() {return date;}
+    public long getDate() {
+        return date;
+    }
 
-    public ArrayList<Lat_Lng> getLocations(){
+    public ArrayList<Lat_Lng> getLocations() {
         return locations;
     }
 
-    public ArrayList<Integer> getTimes(){
+    public ArrayList<Integer> getTimes() {
         return times;
     }
 
-    public void setLocations(ArrayList<Lat_Lng> locations){
+    public void setLocations(ArrayList<Lat_Lng> locations) {
         this.locations = locations;
     }
 
-    public void setTimes(ArrayList<Integer> times){
+    public void setTimes(ArrayList<Integer> times) {
         this.times = times;
     }
 }

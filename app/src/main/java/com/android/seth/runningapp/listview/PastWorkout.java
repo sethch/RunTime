@@ -7,13 +7,13 @@ public class PastWorkout {
     private Workout workout;
     private String key;
 
-    public PastWorkout(String toDisplay, Workout workout, String key){
-        this.toDisplay= toDisplay;
+    public PastWorkout(String toDisplay, Workout workout, String key) {
+        this.toDisplay = toDisplay;
         this.workout = workout;
         this.key = key;
     }
 
-    public String getToDisplay(){
+    public String getToDisplay() {
         return toDisplay;
     }
 
@@ -21,5 +21,7 @@ public class PastWorkout {
         return workout;
     }
 
-    public String getKey() { return key; }
+    public String getKey() {
+        return key;
+    }
 }

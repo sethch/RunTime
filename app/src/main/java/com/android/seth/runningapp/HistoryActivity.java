@@ -25,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class HistoryActivity extends AppCompatActivity{
+public class HistoryActivity extends AppCompatActivity {
 
     private ArrayList<PastWorkout> pastWorkoutList;
     private ProgressDialog progressDialog;
@@ -49,7 +49,7 @@ public class HistoryActivity extends AppCompatActivity{
         listView.setAdapter(adapter);
         populateListView();
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
@@ -57,7 +57,8 @@ public class HistoryActivity extends AppCompatActivity{
     /**
      * Sets onItemClick for each listView item. Clicking on a listView
      * item will call pastWorkoutActivity and send workout information.
-     * @param listView  the listView to set onClickListener for
+     *
+     * @param listView the listView to set onClickListener for
      */
     private void setListViewOnClick(ListView listView) {
         listView.setOnItemClickListener(new ListView.OnItemClickListener() {
@@ -67,7 +68,7 @@ public class HistoryActivity extends AppCompatActivity{
                 Intent pastWorkout = new Intent(HistoryActivity.this, PastWorkoutActivity.class);
                 ArrayList<LatLng> locations_parcelable = new ArrayList<>();
                 ArrayList<Lat_Lng> locations = clicked_workout.getLocations();
-                if(locations != null) {
+                if (locations != null) {
                     for (Lat_Lng curr : locations) {
                         locations_parcelable.add(new LatLng(curr.getLatitude(), curr.getLongitude()));
                     }
@@ -91,14 +92,14 @@ public class HistoryActivity extends AppCompatActivity{
     private void populateListView() {
         progressDialog.setMessage("Loading past workouts...");
         progressDialog.show();
-        if(user != null) {
+        if (user != null) {
             databaseReference.child("users").child(user.getUid()).child("workouts").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     adapter.clear();
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         Workout workout = ds.getValue(Workout.class);
-                        if(workout != null) {
+                        if (workout != null) {
                             float distanceMiles = workout.getDistanceMiles();
                             int durationSeconds = workout.getDuration();
                             String formattedTimeString = UtilityFunctions.getTimeString(durationSeconds);

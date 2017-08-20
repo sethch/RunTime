@@ -46,7 +46,7 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_past_workout);
-        if(googleServicesAvailable()){
+        if (googleServicesAvailable()) {
             initMap();
         }
         Intent intent = getIntent();
@@ -57,7 +57,7 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         int duration = intent.getIntExtra("WORKOUT_DURATION", 0);
         locations = intent.getParcelableArrayListExtra("WORKOUT_LOCATIONS");
         times = intent.getIntegerArrayListExtra("WORKOUT_TIMES");
-        String time = "Time: "  + UtilityFunctions.getTimeString(duration);
+        String time = "Time: " + UtilityFunctions.getTimeString(duration);
         timeStat.setText(time);
         distanceStat.setText("Distance: " + new DecimalFormat("#.##").format(distanceMiles) + " miles");
     }
@@ -87,7 +87,7 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
             buildGoogleApiClient();
         }
 
-        if(locations.size() > 0) {
+        if (locations.size() > 0) {
             redrawPolyLines(locations);
             placeMarkers();
         }
@@ -108,16 +108,16 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
      *
      * @param location_array Array of LatLng objects with which to recreate the workout path
      */
-    public void redrawPolyLines(ArrayList<LatLng> location_array){
+    public void redrawPolyLines(ArrayList<LatLng> location_array) {
         LatLng prev_location = null;
-        for(LatLng location : location_array){
-            if(location != null && prev_location != null) {
+        for (LatLng location : location_array) {
+            if (location != null && prev_location != null) {
                 mGoogleMap.addPolyline(new PolylineOptions()
                         .add(prev_location).add(location).width(10).color(Color.RED));
             }
             prev_location = location;
         }
-        if(prev_location != null) {
+        if (prev_location != null) {
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(prev_location, 16));
         }
     }
@@ -134,6 +134,7 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
 
     /**
      * Called when the client is temporarily in a disconnected state.
+     *
      * @param cause The reason for the disconnection
      */
     @Override
@@ -257,18 +258,18 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
      * Calculates and places mile markers for the workout.
      * Also sets pace text by calculating pace.
      */
-    private void placeMarkers(){
+    private void placeMarkers() {
         ArrayList<Integer> mile_markers = new ArrayList<>();
         Location start = new Location(LocationManager.GPS_PROVIDER);
         Location end = new Location(LocationManager.GPS_PROVIDER);
-        if(locations != null) {
+        if (locations != null) {
             mGoogleMap.addMarker(new MarkerOptions()
                     .position(locations.get(0))
                     .title("Start")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
             );
             mGoogleMap.addMarker(new MarkerOptions()
-                    .position(locations.get(locations.size()-1))
+                    .position(locations.get(locations.size() - 1))
                     .title("End")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
             );
@@ -280,10 +281,10 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
             for (LatLng curr : locations) {
                 current.setLatitude(curr.latitude);
                 current.setLongitude(curr.longitude);
-                if(i > 0) {
+                if (i > 0) {
                     prevDist = dist;
                     dist += current.distanceTo(previous) / 1609.34f;
-                    if((int)prevDist < (int)dist){
+                    if ((int) prevDist < (int) dist) {
                         mile_markers.add(i);
                     }
                 }
@@ -291,19 +292,19 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
                 previous.setLongitude(curr.longitude);
                 i++;
             }
-            int duration_temp = times.get(times.size()-1);
+            int duration_temp = times.get(times.size() - 1);
             float pace = duration_temp / dist;
-            if(dist > 0) {
+            if (dist > 0) {
                 paceStat.setText(UtilityFunctions.getPaceString(pace));
             }
         }
         int i = 1;
-        for(Integer index : mile_markers){
+        for (Integer index : mile_markers) {
             int totalSeconds = times.get(index);
             String time = UtilityFunctions.getTimeString(totalSeconds);
             mGoogleMap.addMarker(new MarkerOptions()
-                        .position(locations.get(index))
-                        .title("Mile " + i + " At " + time)
+                    .position(locations.get(index))
+                    .title("Mile " + i + " At " + time)
             );
             i++;
         }
@@ -313,7 +314,7 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
      * Returns to HistoryActivity upon pressing back.
      */
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         Intent HistoryActivity = new Intent(PastWorkoutActivity.this, HistoryActivity.class);
         startActivity(HistoryActivity);
         finish();

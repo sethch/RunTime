@@ -109,10 +109,9 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         handler = new Handler();
         checkGPSandNetwork();
         checkLocationPermission();
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             restoreVariables(savedInstanceState);
-        }
-        else if(begin){
+        } else if (begin) {
             resumePauseButton.setTag(1);
             locations = new ArrayList<>();
             times = new ArrayList<>();
@@ -158,7 +157,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             if (mLastLocation != null) {
                 distanceTraveledMeters = distanceTraveledMeters + location.distanceTo(mLastLocation);
                 distanceTraveledMiles = distanceTraveledMeters / 1609.34f;
-                if(distanceTraveledMiles > currentMile){
+                if (distanceTraveledMiles > currentMile) {
                     float paceSecondsTotal = (seconds + (minutes * 60)) / distanceTraveledMiles;
                     CharSequence finishedWorkoutString = currentMile + "miles complete. " + UtilityFunctions.getWorkoutStatusString(paceSecondsTotal, distanceTraveledMiles, minutes, seconds);
                     textToSpeech.speak(finishedWorkoutString, TextToSpeech.QUEUE_FLUSH, null, "Workout Finished");
@@ -169,7 +168,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             lastLocation = currLocation;
             currLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             locations.add(currLocation);
-            times.add(new Integer(seconds + (minutes *60)));
+            times.add(new Integer(seconds + (minutes * 60)));
             if (lastLocation != null) {
                 mGoogleMap.addPolyline(new PolylineOptions()
                         .add(lastLocation).add(currLocation).width(10).color(Color.RED));
@@ -189,12 +188,11 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             // Workout was not paused.
             if (status == 1) {
                 // Workout was not started.
-                if(!started){
+                if (!started) {
                     CharSequence finishedWorkoutString = "Workout Started";
                     textToSpeech.speak(finishedWorkoutString, TextToSpeech.QUEUE_FLUSH, null, "Workout Started");
                     started = true;
-                }
-                else{
+                } else {
                     CharSequence finishedWorkoutString = "Workout Resumed";
                     textToSpeech.speak(finishedWorkoutString, TextToSpeech.QUEUE_FLUSH, null, "Workout Resumed");
                 }
@@ -229,17 +227,17 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         float paceSecondsTotal = (seconds + (minutes * 60)) / distanceTraveledMiles;
         CharSequence finishedWorkoutString = "Workout Finished. " + UtilityFunctions.getWorkoutStatusString(paceSecondsTotal, distanceTraveledMiles, minutes, seconds);
         textToSpeech.speak(finishedWorkoutString, TextToSpeech.QUEUE_FLUSH, null, "Workout Finished");
-        while(textToSpeech.isSpeaking()){
+        while (textToSpeech.isSpeaking()) {
             // Waiting...
         }
         ArrayList<Lat_Lng> temp_locations = new ArrayList<>();
-        for(LatLng l : locations){
+        for (LatLng l : locations) {
             temp_locations.add(new Lat_Lng(l.latitude, l.longitude));
         }
         long currentDate = System.currentTimeMillis();
-        Workout workout = new Workout(temp_locations, times, currentDate, distanceTraveledMiles, seconds + minutes *60);
+        Workout workout = new Workout(temp_locations, times, currentDate, distanceTraveledMiles, seconds + minutes * 60);
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        if(user != null) {
+        if (user != null) {
             String key = databaseReference.child("users").child(user.getUid()).child("workouts").push().getKey();
             databaseReference.child("users").child(user.getUid()).child("workouts").child(key).setValue(workout);
         }
@@ -250,7 +248,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     /**
      * Helper function for updating TextViews at top of app.
      */
-    public void setTimerAndDistance(){
+    public void setTimerAndDistance() {
         float UpdateTime = timeBuff + millisecondTime;
         int totalSeconds = (int) (UpdateTime / 1000);
         minutes = totalSeconds / 60;
@@ -258,7 +256,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         String timeString = UtilityFunctions.getTimeString(totalSeconds);
         timerTextView.setText(timeString);
         distanceTextView.setText(UtilityFunctions.getDistanceString(distanceTraveledMiles));
-        if(distanceTraveledMiles > 0) {
+        if (distanceTraveledMiles > 0) {
             float pace = (int) Math.floor((seconds + (minutes * 60)) / distanceTraveledMiles);
             paceTextView.setText(UtilityFunctions.getPaceString(pace));
         }
@@ -473,7 +471,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      *
      * @param savedInstanceState instance state parameter from onCreate
      */
-    private void restoreVariables(Bundle savedInstanceState){
+    private void restoreVariables(Bundle savedInstanceState) {
         resumePauseButton.setTag(savedInstanceState.getInt("TAG"));
         distanceTraveledMiles = savedInstanceState.getFloat("MILES");
         distanceTraveledMeters = savedInstanceState.getFloat("METERS");
@@ -486,14 +484,12 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         lastLocation = savedInstanceState.getParcelable("LAST_LOC");
         timeBuff = savedInstanceState.getLong("TIMEBUFF");
         startTime = savedInstanceState.getLong("STARTTIME");
-        if(begin){
+        if (begin) {
             resumePauseButton.setText(getString(R.string.start));
-        }
-        else if((int) resumePauseButton.getTag() == 1) {
+        } else if ((int) resumePauseButton.getTag() == 1) {
             resumePauseButton.setText(getString(R.string.resume));
             setTimerAndDistance();
-        }
-        else{
+        } else {
             resumePauseButton.setText(getString(R.string.pause));
             handler.postDelayed(runnable, 0);
         }
@@ -505,10 +501,10 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      *
      * @param location_array Array of LatLng objects with which to recreate the workout path
      */
-    public void redrawPolyLines(ArrayList<LatLng> location_array){
+    public void redrawPolyLines(ArrayList<LatLng> location_array) {
         LatLng prev_location = null;
-        for(LatLng location : location_array){
-            if(location != null && prev_location != null) {
+        for (LatLng location : location_array) {
+            if (location != null && prev_location != null) {
                 mGoogleMap.addPolyline(new PolylineOptions()
                         .add(prev_location).add(location).width(10).color(Color.RED));
             }
@@ -525,7 +521,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      * 3. Cancel
      */
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Would you like to store this workout?");
         builder.setNeutralButton("Store", new DialogInterface.OnClickListener() {
@@ -535,7 +531,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         });
         builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-               return;
+                return;
             }
         });
         builder.setNegativeButton("Don't Store", new DialogInterface.OnClickListener() {
@@ -543,11 +539,10 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
                 startHistoryActivity();
             }
         });
-        if(!begin) {
+        if (!begin) {
             AlertDialog dialog = builder.create();
             dialog.show();
-        }
-        else{
+        } else {
             startHistoryActivity();
         }
     }
@@ -556,30 +551,30 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      * Determined whether user has location tracking enabled.
      * If not, asks user to enable location tracking or exits.
      */
-    public void checkGPSandNetwork(){
-        LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+    public void checkGPSandNetwork() {
+        LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         boolean network_enabled = false;
 
         try {
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Log.e("RunActivity", ex.toString());
         }
 
         try {
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Log.e("RunActivity", ex.toString());
         }
 
-        if(!gps_enabled && !network_enabled) {
+        if (!gps_enabled && !network_enabled) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
             dialog.setMessage("Please enable location tracking");
             dialog.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(myIntent);
                 }
             });
@@ -609,7 +604,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      */
     @Override
     public void onInit(int status) {
-        if(status == TextToSpeech.SUCCESS){
+        if (status == TextToSpeech.SUCCESS) {
             int result = textToSpeech.setLanguage(Locale.US);
 
             if (result == TextToSpeech.LANG_MISSING_DATA
