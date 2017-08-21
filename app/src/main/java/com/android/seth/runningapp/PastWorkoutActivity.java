@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -96,9 +96,9 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
     /**
      * Zooms to workout location to just cover the size of the workout.
      */
-    private void initializeZoom(){
+    private void initializeZoom() {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for(Marker marker: markers){
+        for (Marker marker : markers) {
             builder.include(marker.getPosition());
         }
         LatLngBounds bounds = builder.build();

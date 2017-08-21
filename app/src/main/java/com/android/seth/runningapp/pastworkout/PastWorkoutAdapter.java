@@ -38,7 +38,7 @@ public class PastWorkoutAdapter extends ArrayAdapter<PastWorkout> {
      * @param position    Position of ListView item to initialize.
      * @param convertView Old view to reuse if needed.
      * @param parent      Parent that this view will be attached to.
-     * @return            ListView item View.
+     * @return ListView item View.
      */
     @Override
     @NonNull

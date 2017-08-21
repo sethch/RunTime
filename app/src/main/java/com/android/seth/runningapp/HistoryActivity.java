@@ -2,17 +2,17 @@ package com.android.seth.runningapp;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.android.seth.runningapp.pastworkout.PastWorkout;
 import com.android.seth.runningapp.pastworkout.PastWorkoutAdapter;
-import com.android.seth.runningapp.util.UtilityFunctions;
 import com.android.seth.runningapp.util.Lat_Lng;
+import com.android.seth.runningapp.util.UtilityFunctions;
 import com.android.seth.runningapp.util.Workout;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;

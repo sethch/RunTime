@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 
-public class EditTextPreference extends android.preference.EditTextPreference{
+public class EditTextPreference extends android.preference.EditTextPreference {
     @SuppressWarnings("unused")
     public EditTextPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);

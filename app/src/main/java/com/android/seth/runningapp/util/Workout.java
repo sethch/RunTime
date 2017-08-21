@@ -1,7 +1,5 @@
 package com.android.seth.runningapp.util;
 
-import com.android.seth.runningapp.util.Lat_Lng;
-
 import java.util.ArrayList;
 
 public class Workout {

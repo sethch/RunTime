@@ -33,8 +33,8 @@ public class ProfileActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseUser user;
 
-    private String[] drawerOptions = {"Begin", "History", "Settings"};
-    private int[] iconIdList = {R.mipmap.ic_begin, R.mipmap.ic_history, R.mipmap.ic_settings};
+    private String[] drawerOptions = {"Header", "Begin", "History", "Settings"};
+    private int[] iconIdList = {0, R.mipmap.ic_begin, R.mipmap.ic_history, R.mipmap.ic_settings};
     private ActionBarDrawerToggle mDrawerToggle;
     DrawerItemAdapter drawerItemAdapter;
     private DrawerLayout mDrawerLayout;
@@ -79,7 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         };
         mDrawerLayout.addDrawerListener(mDrawerToggle);
-        if(actionBar != null) {
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
@@ -133,13 +133,13 @@ public class ProfileActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent activityToStart = null;
                 switch (position) {
-                    case 0:
+                    case 1:
                         activityToStart = new Intent(ProfileActivity.this, RunActivity.class);
                         break;
-                    case 1:
+                    case 2:
                         activityToStart = new Intent(ProfileActivity.this, HistoryActivity.class);
                         break;
-                    case 2:
+                    case 3:
                         activityToStart = new Intent(ProfileActivity.this, SettingsActivity.class);
                         break;
                 }
@@ -186,7 +186,7 @@ public class ProfileActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         Workout workout = ds.getValue(Workout.class);
-                        if(workout != null) {
+                        if (workout != null) {
                             numWorkouts[0]++;
                             long date = workout.getDate();
                             float miles = workout.getDistanceMiles();
@@ -230,7 +230,7 @@ public class ProfileActivity extends AppCompatActivity {
         ArrayList<DrawerItem> drawerItemArrayList = new ArrayList<>();
         drawerItemAdapter = new DrawerItemAdapter(this, R.layout.drawer_list_item, drawerItemArrayList);
         mDrawerList.setAdapter(drawerItemAdapter);
-        for(int i = 0; i < iconIdList.length; i++){
+        for (int i = 0; i < iconIdList.length; i++) {
             DrawerItem drawerItem = new DrawerItem(iconIdList[i], drawerOptions[i]);
             drawerItemAdapter.add(drawerItem);
         }
