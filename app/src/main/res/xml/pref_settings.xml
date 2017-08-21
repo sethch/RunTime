@@ -5,14 +5,14 @@
     <PreferenceCategory
         android:key="pref_general_settings"
         android:title="@string/pref_general_settings_title">
-        <EditTextPreference
+        <com.android.seth.runningapp.preference.EditTextPreference
             android:capitalize="words"
             android:inputType="textCapWords"
-            android:key="display_name"
+            android:key="pref_display_name"
             android:maxLines="1"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="@string/pref_title_display_name" />
+            android:title="@string/pref_display_name_title" />
     </PreferenceCategory>
 
     <!-- Audio -->

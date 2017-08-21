@@ -12,9 +12,11 @@
         <!-- Navigation Drawer -->
         <string name="drawer_open">Open the navigation drawer</string>
         <string name="drawer_close">Close the navigation drawer</string>
+        <string name="drawer_option_icon_description">Icon for navigation drawer option</string>
 
         <!-- Main Content -->
         <string name="title_activity_profile">Profile</string>
+        <string name="profile_banner">Activity</string>
         <string name="total_miles">Total Miles</string>
         <string name="miles_week">Weekly Miles</string>
         <string name="total_workouts">Total Workouts</string>
@@ -42,7 +44,7 @@
 
         <!-- General settings -->
         <string name="pref_general_settings_title">General Settings</string>
-        <string name="pref_title_display_name">Display name</string>
+        <string name="pref_display_name_title">Display name</string>
 
         <!-- Audio settings -->
         <string name="pref_audio_settings_title">Audio Settings</string>

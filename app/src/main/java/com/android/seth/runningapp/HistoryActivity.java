@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.android.seth.runningapp.listview.PastWorkout;
-import com.android.seth.runningapp.listview.PastWorkoutAdapter;
+import com.android.seth.runningapp.pastworkout.PastWorkout;
+import com.android.seth.runningapp.pastworkout.PastWorkoutAdapter;
 import com.android.seth.runningapp.util.UtilityFunctions;
 import com.android.seth.runningapp.util.Lat_Lng;
 import com.android.seth.runningapp.util.Workout;

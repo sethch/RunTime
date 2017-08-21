@@ -1,14 +1,13 @@
 package com.android.seth.runningapp;
 
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
-import com.android.seth.runningapp.util.AppCompatPreferenceActivity;
+import com.android.seth.runningapp.preference.AppCompatPreferenceActivity;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -22,19 +21,6 @@ import com.android.seth.runningapp.util.AppCompatPreferenceActivity;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
-    /**
-     * A preference value change listener that updates the preference's summary
-     * to reflect its new value.
-     */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString();
-            preference.setSummary(stringValue);
-            return true;
-        }
-    };
-
     /**
      * Navigates back to ProfileActivity if up button is pressed.
      *
@@ -80,3 +66,5 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
     }
 }
+
+// TODO: Add icons to settings

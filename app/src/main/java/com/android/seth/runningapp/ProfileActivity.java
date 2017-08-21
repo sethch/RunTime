@@ -10,10 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.seth.runningapp.navdrawer.DrawerItem;
+import com.android.seth.runningapp.navdrawer.DrawerItemAdapter;
 import com.android.seth.runningapp.util.UtilityFunctions;
 import com.android.seth.runningapp.util.Workout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -32,8 +34,9 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseUser user;
 
     private String[] drawerOptions = {"Begin", "History", "Settings"};
+    private int[] iconIdList = {R.mipmap.ic_begin, R.mipmap.ic_history, R.mipmap.ic_settings};
     private ActionBarDrawerToggle mDrawerToggle;
-    private ActionBar actionBar;
+    DrawerItemAdapter drawerItemAdapter;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 
@@ -51,9 +54,9 @@ public class ProfileActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeLayout();
-        mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerOptions));
+        initializeListView();
         setListViewOnItemClick(mDrawerList);
-        actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         FirebaseDatabase instance = FirebaseDatabase.getInstance();
         databaseReference = instance.getReference();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -76,8 +79,10 @@ public class ProfileActivity extends AppCompatActivity {
             }
         };
         mDrawerLayout.addDrawerListener(mDrawerToggle);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
+        if(actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
         setStats();
     }
 
@@ -165,7 +170,7 @@ public class ProfileActivity extends AppCompatActivity {
     /**
      * Sets TextViews for main content by querying FireBase.
      */
-    public void setStats() {
+    private void setStats() {
         final long currentDate = System.currentTimeMillis();
         final long oneWeekAgo = currentDate - (1000 * 60 * 60 * 24 * 7);
         bestPace[0] = 0f;
@@ -181,17 +186,19 @@ public class ProfileActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         Workout workout = ds.getValue(Workout.class);
-                        numWorkouts[0]++;
-                        long date = workout.getDate();
-                        float miles = workout.getDistanceMiles();
-                        milesAllTime[0] += miles;
-                        if (date >= oneWeekAgo) {
-                            milesWeek[0] += miles;
-                        }
-                        int duration = workout.getDuration();
-                        float pace = duration / miles;
-                        if (pace > bestPace[0] && miles > 0.1) {
-                            bestPace[0] = pace;
+                        if(workout != null) {
+                            numWorkouts[0]++;
+                            long date = workout.getDate();
+                            float miles = workout.getDistanceMiles();
+                            milesAllTime[0] += miles;
+                            if (date >= oneWeekAgo) {
+                                milesWeek[0] += miles;
+                            }
+                            int duration = workout.getDuration();
+                            float pace = duration / miles;
+                            if (pace > bestPace[0] && miles > 0.1) {
+                                bestPace[0] = pace;
+                            }
                         }
                     }
                 }
@@ -215,9 +222,23 @@ public class ProfileActivity extends AppCompatActivity {
         numWorkoutsTextView.setText(numWorkoutsString);
         bestPaceTextView.setText(UtilityFunctions.getPaceString(bestPace[0]));
     }
+
+    /**
+     * Populates the ListView.
+     */
+    private void initializeListView() {
+        ArrayList<DrawerItem> drawerItemArrayList = new ArrayList<>();
+        drawerItemAdapter = new DrawerItemAdapter(this, R.layout.drawer_list_item, drawerItemArrayList);
+        mDrawerList.setAdapter(drawerItemAdapter);
+        for(int i = 0; i < iconIdList.length; i++){
+            DrawerItem drawerItem = new DrawerItem(iconIdList[i], drawerOptions[i]);
+            drawerItemAdapter.add(drawerItem);
+        }
+    }
 }
 
 // TODO: Improve looks of Nav Drawer
 // TODO: Improve looks of main content
 
 // TODO: Async load history activity from service
+// TODO: Mess more with icon size/color

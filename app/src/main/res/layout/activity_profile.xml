@@ -19,8 +19,8 @@
             android:layout_alignParentTop="true"
             android:gravity="center"
             android:background="@drawable/rectangle"
-            android:textSize="24sp"
-            android:text="Welcome Back"
+            android:textSize="28sp"
+            android:text="@string/profile_banner"
             android:textColor="@color/black"
             android:textStyle=""/>
 
@@ -172,8 +172,7 @@
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="25dp"
-                android:layout_weight="1" />
+                android:layout_height="25dp" />
 
             <View
                 android:layout_width="fill_parent"
@@ -187,7 +186,7 @@
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#ddd"
+        android:background="@color/white"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp" />

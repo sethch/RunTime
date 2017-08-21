@@ -123,13 +123,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             initMap();
         } else {
             Toast.makeText(this, "Google maps not supported", Toast.LENGTH_LONG).show();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(5);
+            finish();
         }
     }
 
@@ -189,7 +183,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             lastLocation = currLocation;
             currLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             locations.add(currLocation);
-            times.add(new Integer(seconds + (minutes * 60)));
+            times.add(seconds + (minutes * 60));
             if (lastLocation != null) {
                 mGoogleMap.addPolyline(new PolylineOptions()
                         .add(lastLocation).add(currLocation).width(10).color(Color.RED));
@@ -244,6 +238,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     /**
      * Stores arrayList of locations and times to firebase database when user presses "finish" button.
      */
+    @SuppressWarnings("StatementWithEmptyBody")
     private void storeWorkout() {
         float paceSecondsTotal = (seconds + (minutes * 60)) / distanceTraveledMiles;
         CharSequence finishedWorkoutString = "Workout Finished. " + UtilityFunctions.getWorkoutStatusString(paceSecondsTotal, distanceTraveledMiles, minutes, seconds);
@@ -269,7 +264,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     /**
      * Helper function for updating TextViews at top of app.
      */
-    public void setTimerAndDistance() {
+    private void setTimerAndDistance() {
         float UpdateTime = timeBuff + millisecondTime;
         int totalSeconds = (int) (UpdateTime / 1000);
         minutes = totalSeconds / 60;
@@ -286,7 +281,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     /**
      * Starts a thread keeping track of time while workout is ongoing.
      */
-    public Runnable runnable = new Runnable() {
+    private Runnable runnable = new Runnable() {
         public void run() {
             millisecondTime = SystemClock.uptimeMillis() - startTime;
             setTimerAndDistance();
@@ -297,9 +292,9 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     /**
      * Checks whether the location tracking permission has been granted.
      */
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
-    public boolean checkLocationPermission() {
+    private boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -383,7 +378,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      * @return true if the user has Google Play services APK up to date
      * false otherwise
      */
-    public boolean googleServicesAvailable() {
+    private boolean googleServicesAvailable() {
         GoogleApiAvailability api = GoogleApiAvailability.getInstance();
         int isAvailable = api.isGooglePlayServicesAvailable(this);
         if (isAvailable == ConnectionResult.SUCCESS) {
@@ -425,7 +420,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     /**
      * Configures the GoogleApiClient.
      */
-    protected synchronized void buildGoogleApiClient() {
+    private synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -522,7 +517,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      *
      * @param location_array Array of LatLng objects with which to recreate the workout path
      */
-    public void redrawPolyLines(ArrayList<LatLng> location_array) {
+    private void redrawPolyLines(ArrayList<LatLng> location_array) {
         LatLng prev_location = null;
         for (LatLng location : location_array) {
             if (location != null && prev_location != null) {
@@ -552,7 +547,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         });
         builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                return;
+
             }
         });
         builder.setNegativeButton("Don't Store", new DialogInterface.OnClickListener() {
@@ -572,7 +567,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      * Determined whether user has location tracking enabled.
      * If not, asks user to enable location tracking or exits.
      */
-    public void checkGPSandNetwork() {
+    private void checkGPSandNetwork() {
         LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         boolean network_enabled = false;
@@ -621,7 +616,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     /**
      * Initializes TextToSpeech once it is ready.
      *
-     * @param status
+     * @param status Status of TextToSpeech initialization.
      */
     @Override
     public void onInit(int status) {

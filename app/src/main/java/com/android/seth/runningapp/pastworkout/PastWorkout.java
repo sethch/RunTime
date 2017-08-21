@@ -1,4 +1,4 @@
-package com.android.seth.runningapp.listview;
+package com.android.seth.runningapp.pastworkout;
 
 import com.android.seth.runningapp.util.Workout;
 
