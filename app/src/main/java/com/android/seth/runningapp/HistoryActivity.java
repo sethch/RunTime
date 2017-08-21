@@ -95,7 +95,6 @@ public class HistoryActivity extends AppCompatActivity {
     /**
      * Populates the ListView by pulling workout data from database,
      * formatting each into a string and adding to the PastWorkoutAdapter.
-     * TODO: verify connection
      */
     private void populateListView() {
         progressDialog.setMessage("Loading past workouts...");
@@ -132,6 +131,4 @@ public class HistoryActivity extends AppCompatActivity {
 }
 
 // TODO: Explore multi-threading (maybe RxJava)
-// TODO: improve listview_history appearance
-// TODO: use runkeeper android listview_history for inspiration
-// TODO: Convert up button to nav drawer to make app layout horizontal instead of vertical
+// TODO: improve listview_history appearance (use runkeeper android listview_history for inspiration)

@@ -71,5 +71,3 @@ public class PastWorkoutAdapter extends ArrayAdapter<PastWorkout> {
         return convertView;
     }
 }
-
-// TODO: Improve delete functionality

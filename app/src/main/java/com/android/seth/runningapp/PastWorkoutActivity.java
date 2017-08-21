@@ -16,12 +16,15 @@ import com.android.seth.runningapp.util.UtilityFunctions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -34,6 +37,7 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
     private GoogleMap mGoogleMap;
     private ArrayList<LatLng> locations;
     private ArrayList<Integer> times;
+    private ArrayList<Marker> markers;
 
     private TextView distanceStat;
     private TextView paceStat;
@@ -42,6 +46,7 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        markers = new ArrayList<>();
         initializeLayout();
         if (googleServicesAvailable()) {
             initMap();
@@ -51,7 +56,7 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         int duration = intent.getIntExtra("WORKOUT_DURATION", 0);
         locations = intent.getParcelableArrayListExtra("WORKOUT_LOCATIONS");
         times = intent.getIntegerArrayListExtra("WORKOUT_TIMES");
-        String time = "Time: " + UtilityFunctions.getTimeString(duration);
+        String time = UtilityFunctions.getTimeString(duration);
         timeStat.setText(time);
         distanceStat.setText("Distance: " + new DecimalFormat("#.##").format(distanceMiles) + " miles");
     }
@@ -84,7 +89,22 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         if (locations.size() > 0) {
             redrawPolyLines(locations);
             placeMarkers();
+            initializeZoom();
         }
+    }
+
+    /**
+     * Zooms to workout location to just cover the size of the workout.
+     */
+    private void initializeZoom(){
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for(Marker marker: markers){
+            builder.include(marker.getPosition());
+        }
+        LatLngBounds bounds = builder.build();
+        int padding = 100;
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        mGoogleMap.animateCamera(cameraUpdate);
     }
 
     /**
@@ -110,9 +130,6 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
                         .add(prev_location).add(location).width(10).color(Color.RED));
             }
             prev_location = location;
-        }
-        if (prev_location != null) {
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(prev_location, 16));
         }
     }
 
@@ -174,15 +191,15 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
     private void placeMarkers() {
         ArrayList<Integer> mile_markers = new ArrayList<>();
         if (locations != null) {
-            mGoogleMap.addMarker(new MarkerOptions()
+            markers.add(mGoogleMap.addMarker(new MarkerOptions()
                     .position(locations.get(0))
                     .title("Start")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
             );
-            mGoogleMap.addMarker(new MarkerOptions()
+            markers.add(mGoogleMap.addMarker(new MarkerOptions()
                     .position(locations.get(locations.size() - 1))
                     .title("End")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
             );
             int i = 0;
             float dist = 0f;
@@ -213,9 +230,9 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         for (Integer index : mile_markers) {
             int totalSeconds = times.get(index);
             String time = UtilityFunctions.getTimeString(totalSeconds);
-            mGoogleMap.addMarker(new MarkerOptions()
+            markers.add(mGoogleMap.addMarker(new MarkerOptions()
                     .position(locations.get(index))
-                    .title("Mile " + i + " At " + time)
+                    .title("Mile " + i + " At " + time))
             );
             i++;
         }
@@ -234,4 +251,3 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
 
 // TODO: add delete button to either history_listview or PastWorkoutActivity
 // TODO: Improve mile marker looks/labeling
-// TODO: Zoom to fit whole workout
