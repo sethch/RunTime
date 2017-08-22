@@ -1,4 +1,4 @@
-package com.android.seth.runningapp.util;
+package com.app.seth.runningapp.util;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;

@@ -1,4 +1,4 @@
-package com.android.seth.runningapp.preference;
+package com.app.seth.runningapp.preference;
 
 import android.content.Context;
 import android.content.SharedPreferences;

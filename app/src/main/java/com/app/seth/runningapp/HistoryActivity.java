@@ -1,4 +1,4 @@
-package com.android.seth.runningapp;
+package com.app.seth.runningapp;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -9,11 +9,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.android.seth.runningapp.pastworkout.PastWorkout;
-import com.android.seth.runningapp.pastworkout.PastWorkoutAdapter;
-import com.android.seth.runningapp.util.Lat_Lng;
-import com.android.seth.runningapp.util.UtilityFunctions;
-import com.android.seth.runningapp.util.Workout;
+import com.app.seth.runningapp.R;
+import com.app.seth.runningapp.pastworkout.PastWorkout;
+import com.app.seth.runningapp.pastworkout.PastWorkoutAdapter;
+import com.app.seth.runningapp.util.Lat_Lng;
+import com.app.seth.runningapp.util.UtilityFunctions;
+import com.app.seth.runningapp.util.Workout;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

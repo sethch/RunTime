@@ -1,4 +1,4 @@
-package com.android.seth.runningapp.pastworkout;
+package com.app.seth.runningapp.pastworkout;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,9 +10,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.seth.runningapp.R;
-import com.android.seth.runningapp.util.UtilityFunctions;
-import com.android.seth.runningapp.util.Workout;
+import com.app.seth.runningapp.R;
+import com.app.seth.runningapp.util.UtilityFunctions;
+import com.app.seth.runningapp.util.Workout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;

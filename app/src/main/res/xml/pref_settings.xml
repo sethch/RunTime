@@ -5,7 +5,7 @@
     <PreferenceCategory
         android:key="pref_general_settings"
         android:title="@string/pref_general_settings_title">
-        <com.android.seth.runningapp.preference.EditTextPreference
+        <com.app.seth.runningapp.preference.EditTextPreference
             android:capitalize="words"
             android:inputType="textCapWords"
             android:key="pref_display_name"

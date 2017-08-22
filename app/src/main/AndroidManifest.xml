@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.seth.runningapp">
+    package="com.app.seth.runningapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -32,24 +32,24 @@
         android:theme="@style/AppTheme">
         android:debuggable="true"
         <activity
-            android:name=".ProfileActivity"
+            android:name="com.app.seth.runningapp.ProfileActivity"
             android:label="@string/title_activity_profile"/>
         <activity
-            android:name=".RunActivity"
+            android:name="com.app.seth.runningapp.RunActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".HistoryActivity"
+            android:name="com.app.seth.runningapp.HistoryActivity"
             android:label="@string/title_activity_history"
-            android:parentActivityName=".ProfileActivity" />
+            android:parentActivityName="com.app.seth.runningapp.ProfileActivity" />
         <activity
-            android:name=".PastWorkoutActivity"
+            android:name="com.app.seth.runningapp.PastWorkoutActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.app.seth.runningapp.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".ProfileActivity"/>
+            android:parentActivityName="com.app.seth.runningapp.ProfileActivity"/>
         <activity
-            android:name=".LoginActivity"
+            android:name="com.app.seth.runningapp.LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

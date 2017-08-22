@@ -1,4 +1,4 @@
-package com.android.seth.runningapp.util;
+package com.app.seth.runningapp.util;
 
 public class Lat_Lng {
     private double latitude;

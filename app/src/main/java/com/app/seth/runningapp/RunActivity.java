@@ -1,4 +1,4 @@
-package com.android.seth.runningapp;
+package com.app.seth.runningapp;
 
 
 import android.app.Dialog;
@@ -30,9 +30,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.seth.runningapp.util.Lat_Lng;
-import com.android.seth.runningapp.util.UtilityFunctions;
-import com.android.seth.runningapp.util.Workout;
+import com.app.seth.runningapp.R;
+import com.app.seth.runningapp.util.Lat_Lng;
+import com.app.seth.runningapp.util.UtilityFunctions;
+import com.app.seth.runningapp.util.Workout;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -246,7 +247,13 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
      */
     @SuppressWarnings("StatementWithEmptyBody")
     private void storeWorkout() {
-        float paceSecondsTotal = (seconds + (minutes * 60)) / distanceTraveledMiles;
+        float paceSecondsTotal;
+        if(distanceTraveledMiles > 0) {
+            paceSecondsTotal = (seconds + (minutes * 60)) / distanceTraveledMiles;
+        }
+        else{
+            paceSecondsTotal = 0;
+        }
         CharSequence finishedWorkoutString = "Workout Finished. " + UtilityFunctions.getWorkoutStatusString(paceSecondsTotal, distanceTraveledMiles, minutes, seconds);
         speakIfEnabled(finishedWorkoutString, "Workout Finished");
         while (textToSpeech.isSpeaking()) {
@@ -275,7 +282,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         int totalSeconds = (int) (UpdateTime / 1000);
         minutes = totalSeconds / 60;
         seconds = totalSeconds % 60;
-        String timeString = UtilityFunctions.getTimeString(totalSeconds);
+        String timeString = "Time: " + UtilityFunctions.getTimeString(totalSeconds);
         timerTextView.setText(timeString);
         distanceTextView.setText(UtilityFunctions.getDistanceString(distanceTraveledMiles));
         if (distanceTraveledMiles > 0) {

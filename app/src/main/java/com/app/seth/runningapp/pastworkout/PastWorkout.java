@@ -1,6 +1,6 @@
-package com.android.seth.runningapp.pastworkout;
+package com.app.seth.runningapp.pastworkout;
 
-import com.android.seth.runningapp.util.Workout;
+import com.app.seth.runningapp.util.Workout;
 
 public class PastWorkout {
     private String toDisplay;

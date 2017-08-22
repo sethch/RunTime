@@ -1,4 +1,4 @@
-package com.android.seth.runningapp.navdrawer;
+package com.app.seth.runningapp.navdrawer;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.seth.runningapp.R;
+import com.app.seth.runningapp.R;
 
 import java.util.ArrayList;
 

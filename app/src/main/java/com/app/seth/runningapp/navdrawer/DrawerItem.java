@@ -1,4 +1,4 @@
-package com.android.seth.runningapp.navdrawer;
+package com.app.seth.runningapp.navdrawer;
 
 public class DrawerItem {
     private int imageId;

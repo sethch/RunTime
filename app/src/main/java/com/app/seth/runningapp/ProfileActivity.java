@@ -1,4 +1,4 @@
-package com.android.seth.runningapp;
+package com.app.seth.runningapp;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -13,10 +13,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.seth.runningapp.navdrawer.DrawerItem;
-import com.android.seth.runningapp.navdrawer.DrawerItemAdapter;
-import com.android.seth.runningapp.util.UtilityFunctions;
-import com.android.seth.runningapp.util.Workout;
+import com.app.seth.runningapp.R;
+import com.app.seth.runningapp.navdrawer.DrawerItem;
+import com.app.seth.runningapp.navdrawer.DrawerItemAdapter;
+import com.app.seth.runningapp.util.UtilityFunctions;
+import com.app.seth.runningapp.util.Workout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;

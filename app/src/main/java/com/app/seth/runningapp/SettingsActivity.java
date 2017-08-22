@@ -1,4 +1,4 @@
-package com.android.seth.runningapp;
+package com.app.seth.runningapp;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
@@ -7,7 +7,8 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
-import com.android.seth.runningapp.preference.AppCompatPreferenceActivity;
+import com.app.seth.runningapp.R;
+import com.app.seth.runningapp.preference.AppCompatPreferenceActivity;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On

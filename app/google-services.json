@@ -41,7 +41,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1051057312629:android:e0c899026cc5e69f",
         "android_client_info": {
-          "package_name": "com.android.seth.runningapp"
+          "package_name": "com.app.seth.runningapp"
         }
       },
       "oauth_client": [
@@ -49,7 +49,7 @@
           "client_id": "1051057312629-7qq89e1hq6gckeistmvb0lpi02icski0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.android.seth.runningapp",
+            "package_name": "com.app.seth.runningapp",
             "certificate_hash": "a23d630ffb4d7dc7c3b8aa0b97f0bbcac15653df"
           }
         },

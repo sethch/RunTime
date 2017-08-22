@@ -1,4 +1,4 @@
-package com.android.seth.runningapp;
+package com.app.seth.runningapp;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -12,7 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.seth.runningapp.util.UtilityFunctions;
+import com.app.seth.runningapp.R;
+import com.app.seth.runningapp.util.UtilityFunctions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
