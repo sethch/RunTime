@@ -25,6 +25,9 @@
     <!-- Strings related to HistoryActivity -->
     <string name="title_activity_history">History</string>
     <string name="delete_description">Delete button for past workouts</string>
+    <string name="history_list_time_title">Time</string>
+    <string name="history_list_distance_title">Miles</string>
+    <string name="history_list_pace_title">Min/Mi</string>
 
     <!-- Strings related to RunActivity -->
     <string name="start">Start</string>

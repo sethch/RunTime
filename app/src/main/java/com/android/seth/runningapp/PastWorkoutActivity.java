@@ -39,6 +39,8 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
     private ArrayList<Integer> times;
     private ArrayList<Marker> markers;
 
+    private float pace;
+
     private TextView distanceStat;
     private TextView paceStat;
     private TextView timeStat;
@@ -56,7 +58,8 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         int duration = intent.getIntExtra("WORKOUT_DURATION", 0);
         locations = intent.getParcelableArrayListExtra("WORKOUT_LOCATIONS");
         times = intent.getIntegerArrayListExtra("WORKOUT_TIMES");
-        String time = UtilityFunctions.getTimeString(duration);
+        pace = intent.getFloatExtra("WORKOUT_PACE", 0f);
+        String time = "Time: " + UtilityFunctions.getTimeString(duration);
         timeStat.setText(time);
         distanceStat.setText("Distance: " + new DecimalFormat("#.##").format(distanceMiles) + " miles");
     }
@@ -220,8 +223,6 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
                 previous.setLongitude(curr.longitude);
                 i++;
             }
-            int duration_temp = times.get(times.size() - 1);
-            float pace = duration_temp / dist;
             if (dist > 0) {
                 paceStat.setText(UtilityFunctions.getPaceString(pace));
             }
@@ -229,7 +230,7 @@ public class PastWorkoutActivity extends AppCompatActivity implements OnMapReady
         int i = 1;
         for (Integer index : mile_markers) {
             int totalSeconds = times.get(index);
-            String time = UtilityFunctions.getTimeString(totalSeconds);
+            String time = "Time: " + UtilityFunctions.getTimeString(totalSeconds);
             markers.add(mGoogleMap.addMarker(new MarkerOptions()
                     .position(locations.get(index))
                     .title("Mile " + i + " At " + time))

@@ -30,25 +30,22 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class ProfileActivity extends AppCompatActivity {
-    private DatabaseReference databaseReference;
-    private FirebaseUser user;
-
-    private String[] drawerOptions = {"Header", "Begin", "History", "Settings"};
-    private int[] iconIdList = {0, R.mipmap.ic_begin, R.mipmap.ic_history, R.mipmap.ic_settings};
-    private ActionBarDrawerToggle mDrawerToggle;
-    DrawerItemAdapter drawerItemAdapter;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-
-    private TextView milesWeekTextView;
-    private TextView milesTotalTextView;
-    private TextView numWorkoutsTextView;
-    private TextView bestPaceTextView;
-
     private final float[] milesWeek = new float[1];
     private final float[] milesAllTime = new float[1];
     private final int[] numWorkouts = new int[1];
     private final float[] bestPace = new float[1];
+    DrawerItemAdapter drawerItemAdapter;
+    private DatabaseReference databaseReference;
+    private FirebaseUser user;
+    private String[] drawerOptions = {"Header", "Begin", "History", "Settings"};
+    private int[] iconIdList = {0, R.mipmap.ic_begin, R.mipmap.ic_history, R.mipmap.ic_settings};
+    private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private TextView milesWeekTextView;
+    private TextView milesTotalTextView;
+    private TextView numWorkoutsTextView;
+    private TextView bestPaceTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -194,8 +191,7 @@ public class ProfileActivity extends AppCompatActivity {
                             if (date >= oneWeekAgo) {
                                 milesWeek[0] += miles;
                             }
-                            int duration = workout.getDuration();
-                            float pace = duration / miles;
+                            float pace = workout.getPace();
                             if (pace > bestPace[0] && miles > 0.1) {
                                 bestPace[0] = pace;
                             }
@@ -242,3 +238,5 @@ public class ProfileActivity extends AppCompatActivity {
 
 // TODO: Async load history activity from service
 // TODO: Mess more with icon size/color
+
+// TODO: Potentially define custom xml grid layout

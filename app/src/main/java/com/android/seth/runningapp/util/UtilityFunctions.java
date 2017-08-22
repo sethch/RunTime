@@ -32,9 +32,9 @@ public final class UtilityFunctions {
         int minutes = totalMinutes % 60;
         int seconds = totalSeconds % 60;
         if (hours == 0) {
-            toReturn = "Time: " + String.format(Locale.US, "%1$01d:%2$02d", minutes, seconds);
+            toReturn = String.format(Locale.US, "%1$01d:%2$02d", minutes, seconds);
         } else {
-            toReturn = "Time: " + String.format(Locale.US, "%1$01d:%2$02d:%3$02d", hours, minutes, seconds);
+            toReturn = String.format(Locale.US, "%1$01d:%2$02d:%3$02d", hours, minutes, seconds);
         }
         return toReturn;
     }
@@ -59,7 +59,7 @@ public final class UtilityFunctions {
      */
     public static String getDateString(long timeInMilliseconds) {
         Date date = new Date(timeInMilliseconds);
-        SimpleDateFormat format = new SimpleDateFormat("mm-dd-yyyy hh:mm a", Locale.US);
+        SimpleDateFormat format = new SimpleDateFormat("mm-dd-yyyy \thh:mm a", Locale.US);
         return format.format(date);
     }
 

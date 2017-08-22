@@ -86,6 +86,7 @@ public class HistoryActivity extends AppCompatActivity {
                 pastWorkout.putParcelableArrayListExtra("WORKOUT_LOCATIONS", locations_parcelable);
                 pastWorkout.putIntegerArrayListExtra("WORKOUT_TIMES", clicked_workout.getTimes());
                 pastWorkout.putExtra("WORKOUT_DISTANCE", clicked_workout.getDistanceMiles());
+                pastWorkout.putExtra("WORKOUT_PACE", clicked_workout.getPace());
                 HistoryActivity.this.startActivity(pastWorkout);
                 finish();
             }
@@ -109,7 +110,7 @@ public class HistoryActivity extends AppCompatActivity {
                         if (workout != null) {
                             float distanceMiles = workout.getDistanceMiles();
                             int durationSeconds = workout.getDuration();
-                            String formattedTimeString = UtilityFunctions.getTimeString(durationSeconds);
+                            String formattedTimeString = "Time: " + UtilityFunctions.getTimeString(durationSeconds);
                             long workoutDateInMilliseconds = workout.getDate();
                             String formattedDate = UtilityFunctions.getDateString(workoutDateInMilliseconds);
                             String formattedDistance = UtilityFunctions.getDistanceString(distanceMiles);
@@ -131,4 +132,3 @@ public class HistoryActivity extends AppCompatActivity {
 }
 
 // TODO: Explore multi-threading (maybe RxJava)
-// TODO: improve listview_history appearance (use runkeeper android listview_history for inspiration)

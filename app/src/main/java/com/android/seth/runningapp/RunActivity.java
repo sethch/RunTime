@@ -55,17 +55,17 @@ import java.util.Locale;
 
 public class RunActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener, TextToSpeech.OnInitListener {
+    /**
+     * Checks whether the location tracking permission has been granted.
+     */
+    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
-
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
-
     private SharedPreferences sharedPreferences;
-
     private TextToSpeech textToSpeech;
-
     // TIMER SECTION
     private TextView timerTextView;
     private TextView distanceTextView;
@@ -75,21 +75,28 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     private long millisecondTime, startTime, timeBuff = 0L;
     private Handler handler;
     private int seconds, minutes;
-
     // Will take info from mLastLocation and convert to latitude/longitude for polylines
     private LatLng lastLocation;
     private LatLng currLocation;
     private ArrayList<LatLng> locations;
     private ArrayList<Integer> times;
-
     private float distanceTraveledMeters = 0;
     private float distanceTraveledMiles = 0;
     private float currentMile = 1;
-
     private boolean begin = true;
     private boolean paused = true;
     private boolean started = false;
     private boolean audioEnabled;
+    /**
+     * Starts a thread keeping track of time while workout is ongoing.
+     */
+    private Runnable runnable = new Runnable() {
+        public void run() {
+            millisecondTime = SystemClock.uptimeMillis() - startTime;
+            setTimerAndDistance();
+            handler.postDelayed(this, 0);
+        }
+    };
 
     /**
      * Checks if google play services available.
@@ -250,7 +257,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             temp_locations.add(new Lat_Lng(l.latitude, l.longitude));
         }
         long currentDate = System.currentTimeMillis();
-        Workout workout = new Workout(temp_locations, times, currentDate, distanceTraveledMiles, seconds + minutes * 60);
+        Workout workout = new Workout(temp_locations, times, currentDate, distanceTraveledMiles, paceSecondsTotal, seconds + minutes * 60);
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user != null) {
             String key = databaseReference.child("users").child(user.getUid()).child("workouts").push().getKey();
@@ -276,22 +283,6 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             paceTextView.setText(UtilityFunctions.getPaceString(pace));
         }
     }
-
-    /**
-     * Starts a thread keeping track of time while workout is ongoing.
-     */
-    private Runnable runnable = new Runnable() {
-        public void run() {
-            millisecondTime = SystemClock.uptimeMillis() - startTime;
-            setTimerAndDistance();
-            handler.postDelayed(this, 0);
-        }
-    };
-
-    /**
-     * Checks whether the location tracking permission has been granted.
-     */
-    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     private boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,

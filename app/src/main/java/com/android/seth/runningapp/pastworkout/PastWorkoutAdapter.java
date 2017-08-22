@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.seth.runningapp.R;
+import com.android.seth.runningapp.util.UtilityFunctions;
+import com.android.seth.runningapp.util.Workout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -47,16 +49,25 @@ public class PastWorkoutAdapter extends ArrayAdapter<PastWorkout> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.listview_history, parent, false);
         }
-
-        TextView test = (TextView) convertView.findViewById(R.id.history_list_string);
+        TextView dateTextView = (TextView) convertView.findViewById(R.id.history_list_date);
+        TextView timeTextView = (TextView) convertView.findViewById(R.id.history_list_time);
+        TextView distanceTextView = (TextView) convertView.findViewById(R.id.history_list_distance);
+        TextView paceTextView = (TextView) convertView.findViewById(R.id.history_list_pace);
         ImageButton imageButton = (ImageButton) convertView.findViewById(R.id.delete_btn);
         imageButton.setFocusable(false);
         if (pastWorkout != null) {
-            test.setText(pastWorkout.getToDisplay());
+            Workout workout = pastWorkout.getWorkout();
+            String dateString = UtilityFunctions.getDateString(workout.getDate());
+            String timeString = UtilityFunctions.getTimeString(workout.getDuration());
+            String distanceString = UtilityFunctions.getDistanceString(workout.getDistanceMiles());
+            String paceString = UtilityFunctions.getPaceString(workout.getPace());
+            dateTextView.setText(dateString);
+            timeTextView.setText(timeString);
+            distanceTextView.setText(distanceString);
+            paceTextView.setText(paceString);
             imageButton.setOnClickListener(new View.OnClickListener() {
                 /**
                  * Removes selected workout from HistoryActivity and database.
-                 *
                  * @param view  Clicked view of ListView
                  */
                 @Override
@@ -66,6 +77,7 @@ public class PastWorkoutAdapter extends ArrayAdapter<PastWorkout> {
                     pastWorkoutArrayList.remove(position);
                     notifyDataSetChanged();
                 }
+
             });
         }
         return convertView;

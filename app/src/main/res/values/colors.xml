@@ -9,6 +9,7 @@
     <color name="purple">#9fa8da</color>
     <color name="light_purple">#d1d9ff</color>
     <color name="dark_purple">#6f79a8</color>
+    <color name="text_purple">#8A2BE2</color>
     <color name="medium_purple">#808FD5</color>
     <color name="black">#000</color>
 </resources>
